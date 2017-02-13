@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 #if NET30 || NET35 || NET40 || NET45
 using System.Collections.Concurrent;
@@ -42,8 +41,19 @@ namespace ProtoBuf.Transport
         public void AddOrReplace(DataPair dataPair)
         {
             if (dataPair == null) throw new ArgumentNullException("dataPair");
+#if NET20 || NET30 || NET35
+            if (StringExtension.IsNullOrWhiteSpace(dataPair.Name)) throw new ArgumentException("DataPair.Name must not be null or empty.");
+#endif
 
+#if NET40 || NET45
+            if (string.IsNullOrWhiteSpace(dataPair.Name)) throw new ArgumentException("DataPair.Name must not be null or empty.");
+#endif
             _dataPairs[dataPair.Name] = dataPair;
+        }
+
+        public void AddOrReplace(string propertyName, string propertyValue = null)
+        {
+            AddOrReplace(new DataPair(propertyName, propertyValue));
         }
 
         public bool Remove(string propertyName)
@@ -86,15 +96,35 @@ namespace ProtoBuf.Transport
             return @default;
         }
 
-        public ICollection<DataPair> GetProperties()
+        public bool Exists(string propertyName, string propertyValue)
         {
-            var list = new List<DataPair>();
+            string pv;
+            if (TryGetPropertyValue(propertyName, out pv))
+                return string.Equals(propertyValue, pv, StringComparison.InvariantCulture);
+
+            return false;
+        }
+
+        public IDictionary<string, string> GetProperties()
+        {
+            var result = new Dictionary<string, string>();
             foreach (var dataPair in _dataPairs.Values)
             {
-                list.Add(dataPair.Clone());
+                result[dataPair.Name] = dataPair.Value;
             }
 
-            return new ReadOnlyCollection<DataPair>(list);
+            return result;
+        }
+
+        public IList<DataPair> GetPropertiesList()
+        {
+            var result = new List<DataPair>();
+            foreach (var dataPair in _dataPairs.Values)
+            {
+                result.Add(dataPair);
+            }
+
+            return result;
         }
 
         private void AddDataPairs(IEnumerable<DataPair> dataPairs)

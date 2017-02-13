@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace ProtoBuf.Transport
@@ -35,6 +36,11 @@ namespace ProtoBuf.Transport
             _dataPairs.Add(item);
         }
 
+        public void Add(string header, string value = null)
+        {
+            Add(new DataPair(header, value));
+        }
+
         /// <summary>Removes all items from the <see cref="T:System.Collections.Generic.ICollection`1" />.</summary>
         /// <exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.Generic.ICollection`1" /> is read-only. </exception>
         public void Clear()
@@ -48,6 +54,17 @@ namespace ProtoBuf.Transport
         public bool Contains(DataPair item)
         {
             return _dataPairs.Contains(item);
+        }
+
+        public bool Contains(string header)
+        {
+            foreach (var dataPair in _dataPairs)
+            {
+                if (string.Equals(dataPair.Name, header, StringComparison.InvariantCulture))
+                    return true;
+            }
+
+            return false;
         }
 
         /// <summary>Copies the elements of the <see cref="T:System.Collections.Generic.ICollection`1" /> to an <see cref="T:System.Array" />, starting at a particular <see cref="T:System.Array" /> index.</summary>
@@ -70,6 +87,21 @@ namespace ProtoBuf.Transport
         public bool Remove(DataPair item)
         {
             return _dataPairs.Remove(item);
+        }
+
+        public void Remove(string header)
+        {
+            var toDelete = new List<DataPair>();
+            foreach (var dataPair in _dataPairs)
+            {
+                if (string.Equals(dataPair.Name, header, StringComparison.InvariantCulture))
+                    toDelete.Add(dataPair);
+            }
+
+            foreach (var dataPair in toDelete)
+            {
+                Remove(dataPair);
+            }
         }
 
         /// <summary>Gets the number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1" />.</summary>

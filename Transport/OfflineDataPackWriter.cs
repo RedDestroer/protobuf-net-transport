@@ -31,68 +31,72 @@ namespace ProtoBuf.Transport
                 bw.Write(HeaderSection);
                 var address = GetAddress(bw);
                 bw.Write(0);
-                bw.Write(dataPack.Headers.Count);
+                ushort cnt = (ushort)dataPack.Headers.Count;
+                bw.Write(cnt);
 
-                foreach (var header in dataPack.Headers)
+                for (ushort i = 0; i < cnt; i++)
                 {
-                    Serializer.Serialize(wrapper, header);
+                    Serializer.Serialize(wrapper, dataPack.Headers[i]);
                 }
 
-                WriteSize(bw, address);
+                WriteSize(bw, address + 6);
 
                 // Header section with data properties info
-                var properties = dataPack.Properties.GetProperties();
+                var properties = dataPack.Properties.GetPropertiesList();
                 bw.Write(HeaderSection);
                 address = GetAddress(bw);
                 bw.Write(0);
-                bw.Write(properties.Count);
+                cnt = (ushort)properties.Count;
+                bw.Write(cnt);
 
-                foreach (var property in properties)
+                for (ushort i = 0; i < cnt; i++)
                 {
-                    Serializer.Serialize(wrapper, property);
+                    Serializer.Serialize(wrapper, properties[i]);
                 }
 
-                WriteSize(bw, address);
+                WriteSize(bw, address + 6);
 
                 // Header section with data addInfo's info
                 bw.Write(HeaderSection);
                 address = GetAddress(bw);
                 bw.Write(0);
-                bw.Write(dataPack.AddInfos.Count);
+                cnt = (ushort)dataPack.AddInfos.Count;
+                bw.Write(cnt);
 
-                foreach (var addInfo in dataPack.AddInfos)
+                for (ushort i = 0; i < cnt; i++)
                 {
-                    Serializer.Serialize(wrapper, addInfo);
+                    Serializer.Serialize(wrapper, dataPack.AddInfos[i]);
                 }
 
-                WriteSize(bw, address);
+                WriteSize(bw, address + 6);
 
                 // Header section with data dataPart's info
                 bw.Write(HeaderSection);
                 var dataPartAddress = GetAddress(bw);
                 bw.Write(0);
-                bw.Write(dataPack.DataParts.Count);
+                cnt = (ushort)dataPack.DataParts.Count;
+                bw.Write(cnt);
 
-                for (int i = 0; i < dataPack.DataParts.Count; i++)
+                for (ushort i = 0; i < cnt; i++)
                 {
                     bw.Write(0);
-                    bw.Write(0);
+                    bw.Write((ushort)0);
                     bw.Write(0);
                     bw.Write(0);
                 }
 
-                WriteSize(bw, dataPartAddress);
+                WriteSize(bw, dataPartAddress + 6);
 
                 bw.Write(DataSection);
                 address = GetAddress(bw);
                 bw.Write(0);
 
-                for (int i = 0; i < dataPack.DataParts.Count; i++)
+                for (ushort i = 0; i < cnt; i++)
                 {
                     WriteDataPart(bw, dataPartAddress, i, dataPack);
                 }
 
-                WriteSize(bw, address);
+                WriteSize(bw, address + 4);
 
                 bw.Seek(0, SeekOrigin.End);
                 bw.Flush();
@@ -104,12 +108,13 @@ namespace ProtoBuf.Transport
             int propertiesAddress = GetAddress(bw);
             
             var dataPart = dataPack.DataParts[index];
-            var properties = dataPart.Properties.GetProperties();
+            var properties = dataPart.Properties.GetPropertiesList();
 
+            ushort cnt = (ushort)properties.Count;
             bw.Write(properties.Count);
-            foreach (var property in properties)
+            for (ushort i = 0; i < cnt; i++)
             {
-                Serializer.Serialize(bw.BaseStream, property);
+                Serializer.Serialize(bw.BaseStream, properties[i]);
             }
 
             int dataAddress = GetAddress(bw);
@@ -134,10 +139,10 @@ namespace ProtoBuf.Transport
             int dataSize = GetAddress(bw) - dataAddress;
 
             bw.BaseStream.Seek(dataPartAddress, SeekOrigin.Begin);
-            bw.Seek(index * (4 * 4), SeekOrigin.Current);
+            bw.Seek(index * ((4 * 3) + 2), SeekOrigin.Current);
 
             bw.Write(propertiesAddress);
-            bw.Write(properties.Count);
+            bw.Write(cnt);
             bw.Write(dataAddress);
             bw.Write(dataSize);
             bw.Flush();

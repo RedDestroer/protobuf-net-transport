@@ -5,7 +5,11 @@ namespace ProtoBuf.Transport
     [ProtoContract]
     public class DataPair
     {
-        public DataPair(string name, string value)
+        public DataPair()
+        {
+        }
+
+        public DataPair(string name, string value = null)
         {
             if (name == null) throw new ArgumentNullException("name");
 #if NET20 || NET30 || NET35

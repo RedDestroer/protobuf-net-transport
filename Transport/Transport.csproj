@@ -52,6 +52,8 @@
     <Compile Include="Ambient\BufferProvider.cs" />
     <Compile Include="Ambient\TempProvider.cs" />
     <Compile Include="DataPackReader.cs" />
+    <Compile Include="Funcs.cs" />
+    <Compile Include="FuncStreamGetter.cs" />
     <Compile Include="OfflineDataPackWriter.cs" />
     <Compile Include="DataPair.cs" />
     <Compile Include="DataPack.cs" />

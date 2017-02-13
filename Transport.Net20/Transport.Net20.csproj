@@ -70,6 +70,12 @@
     <Compile Include="..\Transport\DataPackReader.cs">
       <Link>DataPackReader.cs</Link>
     </Compile>
+    <Compile Include="..\Transport\Funcs.cs">
+      <Link>Funcs.cs</Link>
+    </Compile>
+    <Compile Include="..\Transport\FuncStreamGetter.cs">
+      <Link>FuncStreamGetter.cs</Link>
+    </Compile>
     <Compile Include="..\Transport\OfflineDataPackWriter.cs">
       <Link>OfflineDataPackWriter.cs</Link>
     </Compile>

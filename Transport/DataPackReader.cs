@@ -33,52 +33,61 @@ namespace ProtoBuf.Transport
                 if (br.ReadByte() != HeaderSection)
                     throw new InvalidOperationException("Headers header section not found.");
 
-                br.BaseStream.Seek(4, SeekOrigin.Current);
-                int headersCount = br.ReadInt32();
+                int size = br.ReadInt32();
+                ushort headersCount = br.ReadUInt16();
 
-                for (int i = 0; i < headersCount; i++)
+                using (var filter = new FilteredStream(wrapper, br.BaseStream.Position, size))
                 {
-                    dataPack.Headers.Add(Serializer.Deserialize<DataPair>(wrapper));
+                    for (ushort i = 0; i < headersCount; i++)
+                    {
+                        dataPack.Headers.Add(Serializer.Deserialize<DataPair>(filter));
+                    }
                 }
-
+                
                 if (br.ReadByte() != HeaderSection)
                     throw new InvalidOperationException("Properties header section not found.");
 
-                br.BaseStream.Seek(4, SeekOrigin.Current);
-                int propertiesCount = br.ReadInt32();
+                size = br.ReadInt32();
+                ushort propertiesCount = br.ReadUInt16();
 
-                for (int i = 0; i < propertiesCount; i++)
+                using (var filter = new FilteredStream(wrapper, br.BaseStream.Position, size))
                 {
-                    dataPack.Properties.AddOrReplace(Serializer.Deserialize<DataPair>(wrapper));
+                    for (ushort i = 0; i < propertiesCount; i++)
+                    {
+                        dataPack.Properties.AddOrReplace(Serializer.Deserialize<DataPair>(filter));
+                    }
                 }
-
+                
                 if (br.ReadByte() != HeaderSection)
                     throw new InvalidOperationException("AddInfo's header section not found.");
 
-                br.BaseStream.Seek(4, SeekOrigin.Current);
-                int addInfosCount = br.ReadInt32();
+                size = br.ReadInt32();
+                ushort addInfosCount = br.ReadUInt16();
 
-                for (int i = 0; i < addInfosCount; i++)
+                using (var filter = new FilteredStream(wrapper, br.BaseStream.Position, size))
                 {
-                    dataPack.AddInfos.Add(Serializer.Deserialize<AddInfo>(wrapper));
+                    for (ushort i = 0; i < addInfosCount; i++)
+                    {
+                        dataPack.AddInfos.Add(Serializer.Deserialize<AddInfo>(filter));
+                    }
                 }
-
+                
                 if (br.ReadByte() != HeaderSection)
                     throw new InvalidOperationException("DataPart's header section not found.");
 
                 br.BaseStream.Seek(4, SeekOrigin.Current);
-                int dataPartsCount = br.ReadInt32();
+                ushort dataPartsCount = br.ReadUInt16();
                 var dataPartInfos = new List<DataPartInfo>();
 
-                for (int i = 0; i < dataPartsCount; i++)
+                for (ushort i = 0; i < dataPartsCount; i++)
                 {
                     dataPartInfos.Add(new DataPartInfo
-                    {
-                        PropertiesAddress = br.ReadInt32(),
-                        PropertiesCount = br.ReadInt32(),
-                        DataAddress = br.ReadInt32(),
-                        DataSize = br.ReadInt32()
-                    });
+                        {
+                            PropertiesAddress = br.ReadInt32(),
+                            PropertiesCount = br.ReadUInt16(),
+                            DataAddress = br.ReadInt32(),
+                            DataSize = br.ReadInt32()
+                        });
                 }
 
                 ReadDataParts(dataPack, br, dataPartInfos);
@@ -93,7 +102,7 @@ namespace ProtoBuf.Transport
         {
             public int PropertiesAddress { get; set; }
 
-            public int PropertiesCount { get; set; }
+            public ushort PropertiesCount { get; set; }
 
             public int DataAddress { get; set; }
 
