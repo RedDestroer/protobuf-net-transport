@@ -36,7 +36,7 @@ namespace ProtoBuf.Transport
                 int size = br.ReadInt32();
                 ushort headersCount = br.ReadUInt16();
 
-                using (var filter = new FilteredStream(wrapper, br.BaseStream.Position, size))
+                using (var filter = new FilteredStream(wrapper, br.BaseStream.Position, size - 2))
                 {
                     for (ushort i = 0; i < headersCount; i++)
                     {
@@ -50,7 +50,7 @@ namespace ProtoBuf.Transport
                 size = br.ReadInt32();
                 ushort propertiesCount = br.ReadUInt16();
 
-                using (var filter = new FilteredStream(wrapper, br.BaseStream.Position, size))
+                using (var filter = new FilteredStream(wrapper, br.BaseStream.Position, size - 2))
                 {
                     for (ushort i = 0; i < propertiesCount; i++)
                     {
@@ -64,7 +64,7 @@ namespace ProtoBuf.Transport
                 size = br.ReadInt32();
                 ushort addInfosCount = br.ReadUInt16();
 
-                using (var filter = new FilteredStream(wrapper, br.BaseStream.Position, size))
+                using (var filter = new FilteredStream(wrapper, br.BaseStream.Position, size - 2))
                 {
                     for (ushort i = 0; i < addInfosCount; i++)
                     {
