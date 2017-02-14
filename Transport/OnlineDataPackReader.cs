@@ -21,11 +21,12 @@ namespace ProtoBuf.Transport
                 var dataPart = new DataPart(streamGetter);
 
                 stream.Seek(dataPartInfo.PropertiesAddress, SeekOrigin.Begin);
-                ushort dataPartPropertiesCount = br.ReadUInt16();
-
-                for (int i = 0; i < dataPartPropertiesCount; i++)
+                using (var filter = new FilteredStream(stream, dataPartInfo.PropertiesAddress, dataPartInfo.DataAddress - dataPartInfo.PropertiesAddress))
                 {
-                    dataPart.Properties.AddOrReplace(Serializer.Deserialize<DataPair>(stream));
+                    for (ushort i = 0; i < dataPartInfo.PropertiesCount; i++)
+                    {
+                        dataPart.Properties.AddOrReplace(Serializer.DeserializeWithLengthPrefix<DataPair>(filter, PrefixStyle.Base128));
+                    }
                 }
 
                 dataPack.DataParts.Add(dataPart);

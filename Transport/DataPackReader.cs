@@ -40,7 +40,7 @@ namespace ProtoBuf.Transport
                 {
                     for (ushort i = 0; i < headersCount; i++)
                     {
-                        dataPack.Headers.Add(Serializer.Deserialize<DataPair>(filter));
+                        dataPack.Headers.Add(Serializer.DeserializeWithLengthPrefix<DataPair>(filter, PrefixStyle.Base128));
                     }
                 }
                 
@@ -54,7 +54,7 @@ namespace ProtoBuf.Transport
                 {
                     for (ushort i = 0; i < propertiesCount; i++)
                     {
-                        dataPack.Properties.AddOrReplace(Serializer.Deserialize<DataPair>(filter));
+                        dataPack.Properties.AddOrReplace(Serializer.DeserializeWithLengthPrefix<DataPair>(filter, PrefixStyle.Base128));
                     }
                 }
                 
@@ -68,14 +68,15 @@ namespace ProtoBuf.Transport
                 {
                     for (ushort i = 0; i < addInfosCount; i++)
                     {
-                        dataPack.AddInfos.Add(Serializer.Deserialize<AddInfo>(filter));
+                        dataPack.AddInfos.Add(Serializer.DeserializeWithLengthPrefix<AddInfo>(filter, PrefixStyle.Base128));
                     }
                 }
                 
                 if (br.ReadByte() != HeaderSection)
                     throw new InvalidOperationException("DataPart's header section not found.");
 
-                br.BaseStream.Seek(4, SeekOrigin.Current);
+                // ReSharper disable once RedundantAssignment
+                size = br.ReadInt32();
                 ushort dataPartsCount = br.ReadUInt16();
                 var dataPartInfos = new List<DataPartInfo>();
 
