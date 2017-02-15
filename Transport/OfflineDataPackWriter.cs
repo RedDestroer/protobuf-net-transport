@@ -27,6 +27,9 @@ namespace ProtoBuf.Transport
                 // Prefix of data
                 bw.Write(dataPack.GetPrefix(), 0, dataPack.PrefixSize);
 
+                // Stream not signed
+                bw.Write((byte)0);
+
                 // Header section with data headers info
                 bw.Write(HeaderSection);
                 var address = GetAddress(bw);

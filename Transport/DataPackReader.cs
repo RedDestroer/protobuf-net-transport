@@ -11,6 +11,8 @@ namespace ProtoBuf.Transport
         public const byte HeaderSection = 0;
         public const byte DataSection = 1;
 
+        private const byte SignSize = 128;
+
         public DataPack Read(byte[] prefix, Stream stream)
         {
             if (prefix == null) throw new ArgumentNullException("prefix");
@@ -29,6 +31,18 @@ namespace ProtoBuf.Transport
                 var dataPrefix = br.ReadBytes(dataPack.PrefixSize);
                 if (!dataPack.IsPrefixMatch(dataPrefix))
                     throw new InvalidOperationException("Data prefix is wrong.");
+
+                byte isSignedByte = br.ReadByte();
+                switch (isSignedByte)
+                {
+                    case 0: // No sign. Nothing to do
+                        break;
+                    case 1:
+                        wrapper.Seek(SignSize + 4, SeekOrigin.Current); // Sign size plus size of int of protected data size
+                        break;
+                    default:
+                        throw new InvalidOperationException("Unknown information about file sign.");
+                }
 
                 if (br.ReadByte() != HeaderSection)
                     throw new InvalidOperationException("Headers header section not found.");

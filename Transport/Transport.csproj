@@ -40,6 +40,7 @@
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -61,6 +62,9 @@
     <Compile Include="OfflineDataPackReader.cs" />
     <Compile Include="OnlineDataPackReader.cs" />
     <Compile Include="OnlineStreamGetter.cs" />
+    <Compile Include="RsaKeyGenerator.cs" />
+    <Compile Include="RsaSignAlgorithm.cs" />
+    <Compile Include="RsaSigner.cs" />
     <Compile Include="StringExtension.cs" />
     <Compile Include="TempFileStreamGetter.cs" />
     <Compile Include="FilteredStream.cs" />

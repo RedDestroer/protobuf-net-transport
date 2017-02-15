@@ -12,12 +12,11 @@ namespace Transport.Tests
 {
     public partial class TestHelper
     {
+        #region Common part of TestHelper
+
         private static volatile object _syncRoot = new object();
-        private static List<Type> _types;
-        private static Random _random = new Random((int)DateTime.Now.Ticks);
 
-        #region Common часть TestHelper'а
-
+        private static readonly Random Rnd = new Random((int)DateTime.Now.Ticks);
         private static readonly DateTime DateDefault = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
         private static readonly DateTime TimeDefault = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day);
 
@@ -29,6 +28,7 @@ namespace Transport.Tests
         private static DateTime _date = DateDefault;
         private static DateTime _time = TimeDefault;
         private static bool _bool;
+        private static List<Type> _types;
 
         public static long NextInt64()
         {
@@ -163,12 +163,12 @@ namespace Transport.Tests
 
         public static string NextString()
         {
-            return "Неважная строка #" + NextInt32();
+            return "Unimportant string #" + NextInt32();
         }
 
         public static string NextString(int seed)
         {
-            return "Неважная сидированная строка #" + seed;
+            return "Unimportant string with seed #" + seed;
         }
 
         public static string NextString(string format)
@@ -178,19 +178,19 @@ namespace Transport.Tests
 
         public static string NextMailBox()
         {
-            return String.Format("somerec{0}@somehost{1}.com", NextInt32(), NextInt32());
+            return string.Format("somerec{0}@somehost{1}.com", NextInt32(), NextInt32());
         }
 
         public static int RandomInt32(int min, int max)
         {
-            return _random.Next(min, max);
+            return Rnd.Next(min, max);
         }
 
         private static T NextEnum<T>()
         {
             var type = typeof(T);
             if (!type.IsEnum)
-                throw new InvalidOperationException(String.Format("Тип '{0}' не является перечислимым.", type.FullName));
+                throw new InvalidOperationException(string.Format("Type '{0}' is not an enum.", type.FullName));
 
             var values = type.GetEnumValues();
             var index = RandomInt32(0, values.Length);
@@ -218,7 +218,7 @@ namespace Transport.Tests
             Type[] types = objParams.Select(obj => obj == null ? (Type)null : obj.GetType()).ToArray();
             var method = type.GetMethod(methodName, bindingFlags, Type.DefaultBinder, types, new ParameterModifier[] { });
             if (method == null)
-                throw new ArgumentException(String.Format("У типа '{0}' отсутствует метод '{1}'.'", type, methodName));
+                throw new ArgumentException(String.Format("Type '{0}' misses method '{1}'.'", type, methodName));
 
             object objRet = method.Invoke(instance, objParams);
 
@@ -536,7 +536,7 @@ namespace Transport.Tests
         {
             var assembly = Assembly.GetAssembly(typeof(TestHelper));
 
-            var a = assembly.GetTypes().ToList();
+            ////var a = assembly.GetTypes().ToList();
 
             return assembly.GetTypes()
                            .Where(o => o.FullName.Contains("TestHelper"))

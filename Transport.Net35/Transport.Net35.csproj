@@ -47,6 +47,7 @@
     <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -98,6 +99,15 @@
     </Compile>
     <Compile Include="..\Transport\OnlineStreamGetter.cs">
       <Link>OnlineStreamGetter.cs</Link>
+    </Compile>
+    <Compile Include="..\Transport\RsaKeyGenerator.cs">
+      <Link>RsaKeyGenerator.cs</Link>
+    </Compile>
+    <Compile Include="..\Transport\RsaSignAlgorithm.cs">
+      <Link>RsaSignAlgorithm.cs</Link>
+    </Compile>
+    <Compile Include="..\Transport\RsaSigner.cs">
+      <Link>RsaSigner.cs</Link>
     </Compile>
     <Compile Include="..\Transport\StringExtension.cs">
       <Link>StringExtension.cs</Link>
