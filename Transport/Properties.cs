@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-#if NET30 || NET35 || NET40 || NET45
+#if NET40 || NET45
 using System.Collections.Concurrent;
 #endif
 
@@ -20,11 +20,11 @@ namespace ProtoBuf.Transport
         {
             if (dataPairs == null) throw new ArgumentNullException("dataPairs");
 
-#if NET20
+#if NET20 || NET30 || NET35
             _dataPairs = new Dictionary<string, DataPair>();
 #endif
 
-#if NET30 || NET35 || NET40 || NET45
+#if NET40 || NET45
             _dataPairs = new ConcurrentDictionary<string, DataPair>();
 #endif
 

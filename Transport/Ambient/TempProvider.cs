@@ -8,7 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace ProtoBuf.Transport.Ambient
 {
-#if NET30 || NET35 || NET40 || NET45
+#if NET40 || NET45
     [ExcludeFromCodeCoverage]
 #endif
     public abstract class TempProvider

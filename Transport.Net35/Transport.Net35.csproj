@@ -20,7 +20,8 @@
     <DefineConstants>TRACE;DEBUG;NET35</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\protobuf-net-transport.xml</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -50,14 +51,83 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Transport\Abstract\IDataPackReader.cs">
+      <Link>Abstract\IDataPackReader.cs</Link>
+    </Compile>
+    <Compile Include="..\Transport\Abstract\IDataPackWriter.cs">
+      <Link>Abstract\IDataPackWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\Transport\Abstract\IStreamGetter.cs">
+      <Link>Abstract\IStreamGetter.cs</Link>
+    </Compile>
+    <Compile Include="..\Transport\AddInfo.cs">
+      <Link>AddInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Transport\Ambient\BufferProvider.cs">
+      <Link>Ambient\BufferProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\Transport\Ambient\TempProvider.cs">
+      <Link>Ambient\TempProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\Transport\DataPackReader.cs">
+      <Link>DataPackReader.cs</Link>
+    </Compile>
+    <Compile Include="..\Transport\Funcs.cs">
+      <Link>Funcs.cs</Link>
+    </Compile>
+    <Compile Include="..\Transport\FuncStreamGetter.cs">
+      <Link>FuncStreamGetter.cs</Link>
+    </Compile>
+    <Compile Include="..\Transport\OfflineDataPackWriter.cs">
+      <Link>OfflineDataPackWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\Transport\DataPair.cs">
+      <Link>DataPair.cs</Link>
+    </Compile>
+    <Compile Include="..\Transport\DataPack.cs">
+      <Link>DataPack.cs</Link>
+    </Compile>
+    <Compile Include="..\Transport\DataPart.cs">
+      <Link>DataPart.cs</Link>
+    </Compile>
+    <Compile Include="..\Transport\OfflineDataPackReader.cs">
+      <Link>OfflineDataPackReader.cs</Link>
+    </Compile>
+    <Compile Include="..\Transport\OnlineDataPackReader.cs">
+      <Link>OnlineDataPackReader.cs</Link>
+    </Compile>
+    <Compile Include="..\Transport\OnlineStreamGetter.cs">
+      <Link>OnlineStreamGetter.cs</Link>
+    </Compile>
+    <Compile Include="..\Transport\StringExtension.cs">
+      <Link>StringExtension.cs</Link>
+    </Compile>
+    <Compile Include="..\Transport\TempFileStreamGetter.cs">
+      <Link>TempFileStreamGetter.cs</Link>
+    </Compile>
+    <Compile Include="..\Transport\FilteredStream.cs">
+      <Link>FilteredStream.cs</Link>
+    </Compile>
+    <Compile Include="..\Transport\NonClosingStreamWrapper.cs">
+      <Link>NonClosingStreamWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\Transport\Properties.cs">
+      <Link>Properties.cs</Link>
+    </Compile>
+    <Compile Include="..\Transport\Headers.cs">
+      <Link>Headers.cs</Link>
+    </Compile>
+    <Compile Include="..\Transport\TempFile.cs">
+      <Link>TempFile.cs</Link>
+    </Compile>
+    <Compile Include="..\Transport\TransportSerializer.cs">
+      <Link>TransportSerializer.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Transport.snk" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Abstract\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
