@@ -32,8 +32,8 @@ namespace ProtoBuf.Transport
 
                 // Header section with data headers info
                 bw.Write(HeaderSection);
-                var address = GetAddress(bw);
-                bw.Write(0);
+                uint address = GetAddress(bw);
+                bw.Write(0u);
                 ushort cnt = (ushort)dataPack.Headers.Count;
                 bw.Write(cnt);
 
@@ -48,7 +48,7 @@ namespace ProtoBuf.Transport
                 var properties = dataPack.Properties.GetPropertiesList();
                 bw.Write(HeaderSection);
                 address = GetAddress(bw);
-                bw.Write(0);
+                bw.Write(0u);
                 cnt = (ushort)properties.Count;
                 bw.Write(cnt);
 
@@ -62,7 +62,7 @@ namespace ProtoBuf.Transport
                 // Header section with data addInfo's info
                 bw.Write(HeaderSection);
                 address = GetAddress(bw);
-                bw.Write(0);
+                bw.Write(0u);
                 cnt = (ushort)dataPack.AddInfos.Count;
                 bw.Write(cnt);
 
@@ -76,23 +76,23 @@ namespace ProtoBuf.Transport
                 // Header section with data dataPart's info
                 bw.Write(HeaderSection);
                 var dataPartAddress = GetAddress(bw);
-                bw.Write(0);
+                bw.Write(0u);
                 cnt = (ushort)dataPack.DataParts.Count;
                 bw.Write(cnt);
 
                 for (ushort i = 0; i < cnt; i++)
                 {
-                    bw.Write(0);
+                    bw.Write(0u);
                     bw.Write((ushort)0);
-                    bw.Write(0);
-                    bw.Write(0);
+                    bw.Write(0u);
+                    bw.Write(0u);
                 }
 
                 WriteSize(bw, dataPartAddress, dataPartAddress + 4);
 
                 bw.Write(DataSection);
                 address = GetAddress(bw);
-                bw.Write(0);
+                bw.Write(0u);
 
                 for (ushort i = 0; i < cnt; i++)
                 {
@@ -106,9 +106,9 @@ namespace ProtoBuf.Transport
             }
         }
 
-        private void WriteDataPart(BinaryWriter bw, int dataPartAddress, int index, DataPack dataPack)
+        private void WriteDataPart(BinaryWriter bw, uint dataPartAddress, int index, DataPack dataPack)
         {
-            int propertiesAddress = GetAddress(bw);
+            uint propertiesAddress = GetAddress(bw);
             
             var dataPart = dataPack.DataParts[index];
             var properties = dataPart.Properties.GetPropertiesList();
@@ -119,7 +119,7 @@ namespace ProtoBuf.Transport
                 Serializer.SerializeWithLengthPrefix(bw.BaseStream, properties[i], PrefixStyle.Base128);
             }
 
-            int dataAddress = GetAddress(bw);
+            uint dataAddress = GetAddress(bw);
 
             using (var sourceStream = dataPart.CreateStream())
             {
@@ -138,7 +138,7 @@ namespace ProtoBuf.Transport
                 }
             }
 
-            int dataSize = GetAddress(bw) - dataAddress;
+            uint dataSize = GetAddress(bw) - dataAddress;
 
             bw.BaseStream.Seek(dataPartAddress, SeekOrigin.Begin);
             bw.Seek(index * ((4 * 3) + 2), SeekOrigin.Current);
@@ -152,7 +152,7 @@ namespace ProtoBuf.Transport
             bw.Seek(0, SeekOrigin.End);
         }
 
-        private void WriteSize(BinaryWriter bw, int destAddress, int startAddress)
+        private void WriteSize(BinaryWriter bw, uint destAddress, uint startAddress)
         {
             var newAddress = GetAddress(bw);
             bw.BaseStream.Seek(destAddress, SeekOrigin.Begin);
@@ -160,10 +160,10 @@ namespace ProtoBuf.Transport
             bw.BaseStream.Seek(0, SeekOrigin.End);
         }
 
-        private int GetAddress(BinaryWriter bw)
+        private uint GetAddress(BinaryWriter bw)
         {
             bw.Flush();
-            int position = (int)bw.BaseStream.Position;
+            uint position = (uint)bw.BaseStream.Position;
 
             return position;
         }

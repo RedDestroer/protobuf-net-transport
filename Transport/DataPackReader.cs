@@ -47,7 +47,7 @@ namespace ProtoBuf.Transport
                 if (br.ReadByte() != HeaderSection)
                     throw new InvalidOperationException("Headers header section not found.");
 
-                int size = br.ReadInt32();
+                uint size = br.ReadUInt32();
                 ushort headersCount = br.ReadUInt16();
 
                 using (var filter = new FilteredStream(wrapper, br.BaseStream.Position, size - 2))
@@ -61,7 +61,7 @@ namespace ProtoBuf.Transport
                 if (br.ReadByte() != HeaderSection)
                     throw new InvalidOperationException("Properties header section not found.");
 
-                size = br.ReadInt32();
+                size = br.ReadUInt32();
                 ushort propertiesCount = br.ReadUInt16();
 
                 using (var filter = new FilteredStream(wrapper, br.BaseStream.Position, size - 2))
@@ -75,7 +75,7 @@ namespace ProtoBuf.Transport
                 if (br.ReadByte() != HeaderSection)
                     throw new InvalidOperationException("AddInfo's header section not found.");
 
-                size = br.ReadInt32();
+                size = br.ReadUInt32();
                 ushort addInfosCount = br.ReadUInt16();
 
                 using (var filter = new FilteredStream(wrapper, br.BaseStream.Position, size - 2))
@@ -90,7 +90,7 @@ namespace ProtoBuf.Transport
                     throw new InvalidOperationException("DataPart's header section not found.");
 
                 // ReSharper disable once RedundantAssignment
-                size = br.ReadInt32();
+                size = br.ReadUInt32();
                 ushort dataPartsCount = br.ReadUInt16();
                 var dataPartInfos = new List<DataPartInfo>();
 
@@ -98,10 +98,10 @@ namespace ProtoBuf.Transport
                 {
                     dataPartInfos.Add(new DataPartInfo
                         {
-                            PropertiesAddress = br.ReadInt32(),
+                            PropertiesAddress = br.ReadUInt32(),
                             PropertiesCount = br.ReadUInt16(),
-                            DataAddress = br.ReadInt32(),
-                            DataSize = br.ReadInt32()
+                            DataAddress = br.ReadUInt32(),
+                            DataSize = br.ReadUInt32()
                         });
                 }
 
@@ -115,13 +115,13 @@ namespace ProtoBuf.Transport
 
         protected class DataPartInfo
         {
-            public int PropertiesAddress { get; set; }
+            public uint PropertiesAddress { get; set; }
 
             public ushort PropertiesCount { get; set; }
 
-            public int DataAddress { get; set; }
+            public uint DataAddress { get; set; }
 
-            public int DataSize { get; set; }
+            public uint DataSize { get; set; }
         }
     }
 }
