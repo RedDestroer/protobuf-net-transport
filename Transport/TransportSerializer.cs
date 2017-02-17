@@ -37,20 +37,19 @@ namespace ProtoBuf.Transport
             }
         }
 
-        public static void Serialize(Stream stream, DataPack dataPack)
+        public static void Serialize(DataPack dataPack, Stream stream)
         {
-            if (stream == null) throw new ArgumentNullException("stream");
             if (dataPack == null) throw new ArgumentNullException("dataPack");
+            if (stream == null) throw new ArgumentNullException("stream");
 
             DataPackWriter.Write(stream, dataPack);
         }
 
-        public static DataPack Deserialize(byte[] prefix, Stream stream)
+        public static DataPack Deserialize(Stream stream, byte[] prefix = null)
         {
-            if (prefix == null) throw new ArgumentNullException("prefix");
             if (stream == null) throw new ArgumentNullException("stream");
 
-            return DataPackReader.Read(prefix, stream);
+            return DataPackReader.Read(stream, prefix);
         }
     }
 }

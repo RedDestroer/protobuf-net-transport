@@ -31,6 +31,15 @@ namespace ProtoBuf.Transport
             AddDataPairs(dataPairs);
         }
 
+        public string this[string propertyName]
+        {
+            get { return GetPropertyValue(propertyName); }
+            set
+            {
+                AddOrReplace(propertyName, value);
+            }
+        }
+
         public bool Contains(string propertyName)
         {
             if (propertyName == null) throw new ArgumentNullException("propertyName");

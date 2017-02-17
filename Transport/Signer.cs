@@ -1,14 +1,15 @@
 ﻿using System;
 using System.IO;
+using ProtoBuf.Transport.Abstract;
 using ProtoBuf.Transport.Ambient;
 
 namespace ProtoBuf.Transport
 {
-    public static class RsaSigner
+    public static class Signer
     {
-        public static void Sign(uint prefixSize, string keyPair, Stream sourceStream, Stream destinationStream)
+        public static void Sign(uint prefixSize, ISignAlgorithm signAlgorithm, Stream sourceStream, Stream destinationStream)
         {
-            if (keyPair == null) throw new ArgumentNullException("keyPair");
+            if (signAlgorithm == null) throw new ArgumentNullException("signAlgorithm");
             if (sourceStream == null) throw new ArgumentNullException("sourceStream");
             if (destinationStream == null) throw new ArgumentNullException("destinationStream");
 
@@ -24,9 +25,7 @@ namespace ProtoBuf.Transport
                 throw new InvalidOperationException("Destination stream doesn't support reading.");
             if (!destinationStream.CanWrite)
                 throw new InvalidOperationException("Destination stream doesn't support writing.");
-
-            var keyAlgorithm = new RsaSignAlgorithm(keyPair);
-
+            
             sourceStream.Seek(prefixSize, SeekOrigin.Current);
             int isSignedByte = sourceStream.ReadByte();
             if (isSignedByte == 1)
@@ -52,36 +51,40 @@ namespace ProtoBuf.Transport
                 {
                     bw.Write((byte)1);
 
-                    uint signAddress = GetAddress(bw);
+                    uint signInfoAddress = GetAddress(bw);
+                    bw.Write(0); // Protected data size
+                    bw.Write(0); // Sign size
 
-                    for (int i = 0; i < 33; i++) // 128 bytes for sign and 4 byte for data size
-                    {
-                        bw.Write(0);
-                    }
-
-                    uint dataSizeAddress = GetAddress(bw) - 4;
+                    uint dataSizeAddress = GetAddress(bw) - 8;
 
                     while ((byteCount = sourceStream.Read(buffer, 0, buffer.Length)) > 0)
                     {
-                        destinationStream.Write(buffer, 0, byteCount);
+                        wrapper.Write(buffer, 0, byteCount);
                     }
 
-                    destinationStream.Flush();
-                    uint dataSize = GetAddress(bw) - dataSizeAddress - 4;
+                    wrapper.Flush();
+                    uint protectedDataSize = GetAddress(bw) - dataSizeAddress;
 
-                    destinationStream.Position = dataSizeAddress;
-                    bw.Write(dataSize);
+                    wrapper.Position = dataSizeAddress;
+                    bw.Write(protectedDataSize);
                     bw.Flush();
 
                     byte[] sign;
-                    using (var filter = new FilteredStream(destinationStream, dataSizeAddress, dataSize + 4))
+                    using (var filter = new FilteredStream(wrapper, dataSizeAddress, protectedDataSize))
                     {
-                        sign = keyAlgorithm.GetSign(filter);
+                        sign = signAlgorithm.GetSign(filter);
                     }
 
-                    destinationStream.Position = signAddress;
+                    wrapper.Seek(0, SeekOrigin.End);
+
                     bw.Write(sign, 0, sign.Length);
                     bw.Flush();
+
+                    wrapper.Position = signInfoAddress;
+                    bw.Write((uint)sign.Length);
+                    bw.Flush();
+
+                    wrapper.Seek(0, SeekOrigin.End);
                 }
             }
             finally
@@ -107,9 +110,9 @@ namespace ProtoBuf.Transport
             return false;
         }
 
-        public static bool IsSignMatch(uint prefixSize, string publicKey, Stream stream)
+        public static bool IsSignMatch(uint prefixSize, ISignAlgorithm signAlgorithm, Stream stream)
         {
-            if (publicKey == null) throw new ArgumentNullException("publicKey");
+            if (signAlgorithm == null) throw new ArgumentNullException("signAlgorithm");
             if (stream == null) throw new ArgumentNullException("stream");
 
             if (!stream.CanSeek)
@@ -118,7 +121,6 @@ namespace ProtoBuf.Transport
                 throw new InvalidOperationException("Stream doesn't support reading.");
 
             long position = stream.Position;
-            var keyAlgorithm = new RsaSignAlgorithm(publicKey);
 
             stream.Seek(prefixSize, SeekOrigin.Current);
             int isSignedByte = stream.ReadByte();
@@ -128,16 +130,16 @@ namespace ProtoBuf.Transport
             using (var wrapper = new NonClosingStreamWrapper(stream)) // To prevent stream from closing by BinaryReader
             using (var br = new BinaryReader(wrapper))
             {
-                using (var signStream = new FilteredStream(stream, stream.Position, 128))
+                uint protectedDataSize = br.ReadUInt32(); // Protected data size
+                uint signSize = br.ReadUInt32(); // Sign size
+
+                using (var signStream = new FilteredStream(wrapper, wrapper.Position + protectedDataSize, signSize))
                 {
-                    stream.Seek(128, SeekOrigin.Current);
-                    uint dataSize = br.ReadUInt32();
-
-                    using (var dataStream = new FilteredStream(stream, stream.Position - 4, dataSize + 4))
+                    using (var dataStream = new FilteredStream(wrapper, wrapper.Position, protectedDataSize - 8))
                     {
-                        var result = keyAlgorithm.VerifySign(dataStream, signStream);
+                        var result = signAlgorithm.VerifySign(dataStream, signStream);
 
-                        stream.Position = position;
+                        wrapper.Position = position;
 
                         return result;
                     }
@@ -153,22 +155,34 @@ namespace ProtoBuf.Transport
             var buffer = BufferProvider.Current.TakeBuffer();
             try
             {
-                int byteCount;
-                uint prefixBytesLeft = prefixSize;
-                while ((byteCount = sourceStream.Read(buffer, 0, (int)Math.Min(buffer.Length, prefixBytesLeft))) > 0)
+                using (var wrapper = new NonClosingStreamWrapper(sourceStream)) // To prevent stream from closing by BinaryReader
+                using (var br = new BinaryReader(wrapper))
                 {
-                    destinationStream.Write(buffer, 0, byteCount);
-                    prefixBytesLeft -= (uint)byteCount;
-                    if (prefixBytesLeft == 0)
-                        break;
-                }
+                    int byteCount;
+                    uint prefixBytesLeft = prefixSize;
+                    while ((byteCount = wrapper.Read(buffer, 0, (int)Math.Min(buffer.Length, prefixBytesLeft))) > 0)
+                    {
+                        destinationStream.Write(buffer, 0, byteCount);
+                        prefixBytesLeft -= (uint)byteCount;
+                        if (prefixBytesLeft == 0)
+                            break;
+                    }
 
-                sourceStream.WriteByte(0);
-                sourceStream.Seek(128 + 4, SeekOrigin.Current);
+                    uint protectedDataSize = br.ReadUInt32(); // Protected data size
 
-                while ((byteCount = sourceStream.Read(buffer, 0, buffer.Length)) > 0)
-                {
-                    destinationStream.Write(buffer, 0, byteCount);
+                    // ReSharper disable once UnusedVariable
+                    uint signSize = br.ReadUInt32(); // Sign size
+
+                    destinationStream.WriteByte(0);
+                    wrapper.Seek(4 + 4, SeekOrigin.Current);
+
+                    while ((byteCount = wrapper.Read(buffer, 0, (int)Math.Min(buffer.Length, protectedDataSize))) > 0)
+                    {
+                        destinationStream.Write(buffer, 0, byteCount);
+                        protectedDataSize -= (uint)byteCount;
+                        if (protectedDataSize == 0)
+                            break;
+                    }
                 }
             }
             finally

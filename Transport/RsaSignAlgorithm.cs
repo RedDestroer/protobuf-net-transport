@@ -2,19 +2,21 @@ using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using ProtoBuf.Transport.Abstract;
 
 namespace ProtoBuf.Transport
 {
     public class RsaSignAlgorithm
+        : ISignAlgorithm
     {
         private const string HashAlgName = "SHA256";
-        private readonly string _keyPair;
+        private readonly string _keyPairOrPublicKey;
 
-        public RsaSignAlgorithm(string keyPair)
+        public RsaSignAlgorithm(string keyPairOrPublicKey)
         {
-            if (keyPair == null) throw new ArgumentNullException("keyPair");
+            if (keyPairOrPublicKey == null) throw new ArgumentNullException("keyPairOrPublicKey");
 
-            _keyPair = keyPair;
+            _keyPairOrPublicKey = keyPairOrPublicKey;
         }
 
         public static RSACryptoServiceProvider GetProviderFromKey(string keyPair)
@@ -73,7 +75,7 @@ namespace ProtoBuf.Transport
 
         private bool VerifySign(byte[] hashBytes, byte[] signBytes)
         {
-            using (RSACryptoServiceProvider rsaAlg = GetProviderFromKey(_keyPair))
+            using (RSACryptoServiceProvider rsaAlg = GetProviderFromKey(_keyPairOrPublicKey))
             {
                 var deformatter = new RSAPKCS1SignatureDeformatter(rsaAlg);
                 deformatter.SetHashAlgorithm(HashAlgName);
@@ -105,7 +107,7 @@ namespace ProtoBuf.Transport
         {
             byte[] hashBytes = Encoding.UTF8.GetBytes(md5Hash);
 
-            using (RSACryptoServiceProvider rsaAlg = GetProviderFromKey(_keyPair))
+            using (RSACryptoServiceProvider rsaAlg = GetProviderFromKey(_keyPairOrPublicKey))
             {
                 var formatter = new RSAPKCS1SignatureFormatter(rsaAlg);
                 formatter.SetHashAlgorithm(HashAlgName);

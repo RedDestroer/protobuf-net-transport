@@ -56,17 +56,20 @@
     <Compile Include="..\Transport\Abstract\IDataPackWriter.cs">
       <Link>Abstract\IDataPackWriter.cs</Link>
     </Compile>
+    <Compile Include="..\Transport\Abstract\ISignAlgorithm.cs">
+      <Link>Abstract\ISignAlgorithm.cs</Link>
+    </Compile>
     <Compile Include="..\Transport\Abstract\IStreamGetter.cs">
       <Link>Abstract\IStreamGetter.cs</Link>
-    </Compile>
-    <Compile Include="..\Transport\AddInfo.cs">
-      <Link>AddInfo.cs</Link>
     </Compile>
     <Compile Include="..\Transport\Ambient\BufferProvider.cs">
       <Link>Ambient\BufferProvider.cs</Link>
     </Compile>
     <Compile Include="..\Transport\Ambient\TempProvider.cs">
       <Link>Ambient\TempProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\Transport\Ambient\TimeProvider.cs">
+      <Link>Ambient\TimeProvider.cs</Link>
     </Compile>
     <Compile Include="..\Transport\DataPackReader.cs">
       <Link>DataPackReader.cs</Link>
@@ -104,8 +107,8 @@
     <Compile Include="..\Transport\RsaSignAlgorithm.cs">
       <Link>RsaSignAlgorithm.cs</Link>
     </Compile>
-    <Compile Include="..\Transport\RsaSigner.cs">
-      <Link>RsaSigner.cs</Link>
+    <Compile Include="..\Transport\Signer.cs">
+      <Link>Signer.cs</Link>
     </Compile>
     <Compile Include="..\Transport\StringExtension.cs">
       <Link>StringExtension.cs</Link>

@@ -20,12 +20,27 @@ namespace ProtoBuf.Transport
 
                 var dataPart = new DataPart(streamGetter);
 
-                stream.Seek(dataPartInfo.PropertiesAddress, SeekOrigin.Begin);
-                using (var filter = new FilteredStream(stream, dataPartInfo.PropertiesAddress, dataPartInfo.DataAddress - dataPartInfo.PropertiesAddress))
+                if (dataPartInfo.HeadersCount > 0)
                 {
-                    for (ushort i = 0; i < dataPartInfo.PropertiesCount; i++)
+                    stream.Seek(dataPartInfo.HeadersAddress, SeekOrigin.Begin);
+                    using (var filter = new FilteredStream(stream, dataPartInfo.HeadersAddress, dataPartInfo.HeadersSize))
                     {
-                        dataPart.Properties.AddOrReplace(Serializer.DeserializeWithLengthPrefix<DataPair>(filter, PrefixStyle.Base128));
+                        for (ushort i = 0; i < dataPartInfo.HeadersCount; i++)
+                        {
+                            dataPart.Headers.Add(Serializer.DeserializeWithLengthPrefix<DataPair>(filter, PrefixStyle.Base128));
+                        }
+                    }
+                }
+
+                if (dataPartInfo.PropertiesCount > 0)
+                {
+                    stream.Seek(dataPartInfo.PropertiesAddress, SeekOrigin.Begin);
+                    using (var filter = new FilteredStream(stream, dataPartInfo.PropertiesAddress, dataPartInfo.PropertiesSize))
+                    {
+                        for (ushort i = 0; i < dataPartInfo.PropertiesCount; i++)
+                        {
+                            dataPart.Properties.AddOrReplace(Serializer.DeserializeWithLengthPrefix<DataPair>(filter, PrefixStyle.Base128));
+                        }
                     }
                 }
 

@@ -48,10 +48,12 @@
   <ItemGroup>
     <Compile Include="Abstract\IDataPackReader.cs" />
     <Compile Include="Abstract\IDataPackWriter.cs" />
+    <Compile Include="Abstract\ISignAlgorithm.cs" />
     <Compile Include="Abstract\IStreamGetter.cs" />
-    <Compile Include="AddInfo.cs" />
     <Compile Include="Ambient\BufferProvider.cs" />
     <Compile Include="Ambient\TempProvider.cs" />
+    <Compile Include="Ambient\TimeProvider.cs" />
+    <Compile Include="Consts.cs" />
     <Compile Include="DataPackReader.cs" />
     <Compile Include="Funcs.cs" />
     <Compile Include="FuncStreamGetter.cs" />
@@ -64,7 +66,7 @@
     <Compile Include="OnlineStreamGetter.cs" />
     <Compile Include="RsaKeyGenerator.cs" />
     <Compile Include="RsaSignAlgorithm.cs" />
-    <Compile Include="RsaSigner.cs" />
+    <Compile Include="Signer.cs" />
     <Compile Include="StringExtension.cs" />
     <Compile Include="TempFileStreamGetter.cs" />
     <Compile Include="FilteredStream.cs" />

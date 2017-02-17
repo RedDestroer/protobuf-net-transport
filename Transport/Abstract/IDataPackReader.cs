@@ -4,6 +4,6 @@ namespace ProtoBuf.Transport.Abstract
 {
     public interface IDataPackReader
     {
-        DataPack Read(byte[] prefix, Stream stream);
+        DataPack Read(Stream stream, byte[] prefix = null);
     }
 }

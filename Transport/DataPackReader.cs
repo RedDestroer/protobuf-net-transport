@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using ProtoBuf.Transport.Abstract;
 
@@ -8,14 +9,11 @@ namespace ProtoBuf.Transport
     public abstract class DataPackReader
         : IDataPackReader
     {
-        public const byte HeaderSection = 0;
-        public const byte DataSection = 1;
+        public const byte InfoSection = 1;
+        public const byte DataSection = 2;
 
-        private const byte SignSize = 128;
-
-        public DataPack Read(byte[] prefix, Stream stream)
+        public DataPack Read(Stream stream, byte[] prefix = null)
         {
-            if (prefix == null) throw new ArgumentNullException("prefix");
             if (stream == null) throw new ArgumentNullException("stream");
 
             if (!stream.CanSeek)
@@ -38,16 +36,42 @@ namespace ProtoBuf.Transport
                     case 0: // No sign. Nothing to do
                         break;
                     case 1:
-                        wrapper.Seek(SignSize + 4, SeekOrigin.Current); // Sign size plus size of int of protected data size
+                        // ReSharper disable once UnusedVariable
+                        uint protectedDataSize = br.ReadUInt32(); // Protected data size
+
+                        // ReSharper disable once UnusedVariable
+                        uint signSize = br.ReadUInt32(); // Sign size
+
                         break;
                     default:
                         throw new InvalidOperationException("Unknown information about file sign.");
                 }
 
-                if (br.ReadByte() != HeaderSection)
-                    throw new InvalidOperationException("Headers header section not found.");
+                if (br.ReadByte() != InfoSection)
+                    throw new InvalidOperationException("Implicit properties info section not found.");
 
                 uint size = br.ReadUInt32();
+                ushort propertiesCount = br.ReadUInt16();
+
+                var implicitProperties = new Properties();
+                using (var filter = new FilteredStream(wrapper, br.BaseStream.Position, size - 2))
+                {
+                    for (ushort i = 0; i < propertiesCount; i++)
+                    {
+                        implicitProperties.AddOrReplace(Serializer.DeserializeWithLengthPrefix<DataPair>(filter, PrefixStyle.Base128));
+                    }
+                }
+
+                var dateCreateString = implicitProperties.TryGetPropertyValue("DateCreate", null);
+                if (dateCreateString != null)
+                {
+                    dataPack.DateCreate = DateTime.ParseExact(dateCreateString, Consts.DateTimeFormat, CultureInfo.InvariantCulture);
+                }
+                
+                if (br.ReadByte() != InfoSection)
+                    throw new InvalidOperationException("Headers info section not found.");
+
+                size = br.ReadUInt32();
                 ushort headersCount = br.ReadUInt16();
 
                 using (var filter = new FilteredStream(wrapper, br.BaseStream.Position, size - 2))
@@ -57,12 +81,12 @@ namespace ProtoBuf.Transport
                         dataPack.Headers.Add(Serializer.DeserializeWithLengthPrefix<DataPair>(filter, PrefixStyle.Base128));
                     }
                 }
-                
-                if (br.ReadByte() != HeaderSection)
-                    throw new InvalidOperationException("Properties header section not found.");
+
+                if (br.ReadByte() != InfoSection)
+                    throw new InvalidOperationException("Properties info section not found.");
 
                 size = br.ReadUInt32();
-                ushort propertiesCount = br.ReadUInt16();
+                propertiesCount = br.ReadUInt16();
 
                 using (var filter = new FilteredStream(wrapper, br.BaseStream.Position, size - 2))
                 {
@@ -71,23 +95,9 @@ namespace ProtoBuf.Transport
                         dataPack.Properties.AddOrReplace(Serializer.DeserializeWithLengthPrefix<DataPair>(filter, PrefixStyle.Base128));
                     }
                 }
-                
-                if (br.ReadByte() != HeaderSection)
-                    throw new InvalidOperationException("AddInfo's header section not found.");
 
-                size = br.ReadUInt32();
-                ushort addInfosCount = br.ReadUInt16();
-
-                using (var filter = new FilteredStream(wrapper, br.BaseStream.Position, size - 2))
-                {
-                    for (ushort i = 0; i < addInfosCount; i++)
-                    {
-                        dataPack.AddInfos.Add(Serializer.DeserializeWithLengthPrefix<AddInfo>(filter, PrefixStyle.Base128));
-                    }
-                }
-                
-                if (br.ReadByte() != HeaderSection)
-                    throw new InvalidOperationException("DataPart's header section not found.");
+                if (br.ReadByte() != InfoSection)
+                    throw new InvalidOperationException("DataPart's info section not found.");
 
                 // ReSharper disable once RedundantAssignment
                 size = br.ReadUInt32();
@@ -98,8 +108,12 @@ namespace ProtoBuf.Transport
                 {
                     dataPartInfos.Add(new DataPartInfo
                         {
+                            HeadersAddress = br.ReadUInt32(),
+                            HeadersCount = br.ReadUInt16(),
+                            HeadersSize = br.ReadUInt32(),
                             PropertiesAddress = br.ReadUInt32(),
                             PropertiesCount = br.ReadUInt16(),
+                            PropertiesSize = br.ReadUInt32(),
                             DataAddress = br.ReadUInt32(),
                             DataSize = br.ReadUInt32()
                         });
@@ -115,9 +129,17 @@ namespace ProtoBuf.Transport
 
         protected class DataPartInfo
         {
+            public uint HeadersAddress { get; set; }
+
+            public ushort HeadersCount { get; set; }
+            
+            public uint HeadersSize { get; set; }
+
             public uint PropertiesAddress { get; set; }
 
             public ushort PropertiesCount { get; set; }
+
+            public uint PropertiesSize { get; set; }
 
             public uint DataAddress { get; set; }
 
