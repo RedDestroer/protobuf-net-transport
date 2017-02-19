@@ -45,7 +45,7 @@ namespace ProtoBuf.Transport.Ambient
         public abstract void ReturnBuffer(byte[] buffer);
         public abstract void Clear();
 
-#if NET20
+#if NET20 || !FEAT_SERVICEMODEL
         internal class DefaultBufferProvider
             : BufferProvider
         {
@@ -95,7 +95,7 @@ namespace ProtoBuf.Transport.Ambient
         }
 #endif
 
-#if NET30 || NET35 || NET40 || NET45
+#if (NET30 || NET35 || NET40 || NET45) && FEAT_SERVICEMODEL
         internal class DefaultBufferProvider
             : BufferProvider
         {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Text;
 using ProtoBuf.Transport.Abstract;
 
 namespace ProtoBuf.Transport
@@ -21,14 +22,50 @@ namespace ProtoBuf.Transport
             if (!stream.CanRead)
                 throw new InvalidOperationException("Stream doesn't support reading.");
 
-            var dataPack = new DataPack(prefix);
+            DataPack dataPack;
 
             using (var wrapper = new NonClosingStreamWrapper(stream)) // To prevent source stream from closing by BinaryReader
             using (var br = new BinaryReader(wrapper))
             {
-                var dataPrefix = br.ReadBytes(dataPack.PrefixSize);
+                long pos = wrapper.Position;
+                byte prefixSize = 0;
+                byte[] dataPrefix = null;
+
+                if (prefix != null)
+                {
+                    prefixSize = (byte)prefix.Length;
+                    dataPrefix = br.ReadBytes(prefixSize);
+                }
+                else
+                {
+                    bool found = false;
+                    for (byte i = 0; i < 255; i++)
+                    {
+                        if (br.ReadByte() == 255)
+                        {
+                            prefixSize = i;
+                            found = true;
+                            break;
+                        }
+                    }
+                    
+                    if (!found)
+                        throw new InvalidOperationException("Can't find end of the prefix.");
+
+                    wrapper.Position = pos;
+                    if (prefixSize > 0)
+                    {
+                        dataPrefix = br.ReadBytes(prefixSize);
+                    }
+                }
+
+                dataPack = new DataPack(dataPrefix);
+
                 if (!dataPack.IsPrefixMatch(dataPrefix))
                     throw new InvalidOperationException("Data prefix is wrong.");
+
+                if (br.ReadByte() != 255)
+                    throw new InvalidOperationException("End of the prefix contains wrong byte.");
 
                 byte isSignedByte = br.ReadByte();
                 switch (isSignedByte)
@@ -67,7 +104,13 @@ namespace ProtoBuf.Transport
                 {
                     dataPack.DateCreate = DateTime.ParseExact(dateCreateString, Consts.DateTimeFormat, CultureInfo.InvariantCulture);
                 }
-                
+
+                var descriptionString = implicitProperties.TryGetPropertyValue("Description", null);
+                if (descriptionString != null)
+                {
+                    dataPack.Description = descriptionString;
+                }
+
                 if (br.ReadByte() != InfoSection)
                     throw new InvalidOperationException("Headers info section not found.");
 
@@ -125,8 +168,18 @@ namespace ProtoBuf.Transport
             return dataPack;
         }
 
-        protected abstract void ReadDataParts(DataPack dataPack, BinaryReader br, List<DataPartInfo> dataPartInfos);
+        public DataPack Read(Stream stream, string prefix = null)
+        {
+            if (prefix == null)
+                return Read(stream, (byte[])null);
 
+            var bytes = Encoding.UTF8.GetBytes(prefix);
+
+            return Read(stream, bytes);
+        }
+
+        protected abstract void ReadDataParts(DataPack dataPack, BinaryReader br, List<DataPartInfo> dataPartInfos);
+        
         protected class DataPartInfo
         {
             public uint HeadersAddress { get; set; }

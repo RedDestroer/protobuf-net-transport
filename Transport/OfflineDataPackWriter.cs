@@ -28,6 +28,8 @@ namespace ProtoBuf.Transport
                 // Prefix of data
                 bw.Write(dataPack.GetPrefix(), 0, dataPack.PrefixSize);
 
+                bw.Write((byte)255);
+
                 uint signInfoAddress = 0;
                 uint dataSizeAddress = 0;
                 if (signAlgorithm == null)
@@ -49,6 +51,8 @@ namespace ProtoBuf.Transport
                 var implicitProperties = new Properties();
                 if (dataPack.DateCreate != null)
                     implicitProperties["DateCreate"] = dataPack.DateCreate.Value.ToString(Consts.DateTimeFormat, CultureInfo.InvariantCulture);
+                if (dataPack.Description != null)
+                    implicitProperties["Description"] = dataPack.Description;
 
                 // Info section implicit properties
                 var properties = implicitProperties.GetPropertiesList();

@@ -17,7 +17,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NET40</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NET40 FEAT_SERVICEMODEL</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>
@@ -27,7 +27,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;NET40</DefineConstants>
+    <DefineConstants>TRACE;NET40 FEAT_SERVICEMODEL</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\protobuf-net-transport.xml</DocumentationFile>
@@ -36,113 +36,55 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Transport.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\Transport.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-  <ItemGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug_WO_SM|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug_WO_SM\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NET40</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release_WO_SM|AnyCPU'">
+    <OutputPath>bin\Release_WO_SM\</OutputPath>
+    <DefineConstants>TRACE;NET40</DefineConstants>
+    <DocumentationFile>bin\Release\protobuf-net-transport.xml</DocumentationFile>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(Configuration)' != 'Debug' AND '$(Configuration)' != 'Release'">
+    <Reference Include="protobuf-net">
+      <HintPath>..\Temp\NET40-sm\protobuf-net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)' == 'Debug' OR '$(Configuration)' == 'Release'">
     <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
       <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Transport\Abstract\IDataPackReader.cs">
-      <Link>Abstract\IDataPackReader.cs</Link>
-    </Compile>
-    <Compile Include="..\Transport\Abstract\IDataPackWriter.cs">
-      <Link>Abstract\IDataPackWriter.cs</Link>
-    </Compile>
-    <Compile Include="..\Transport\Abstract\ISignAlgorithm.cs">
-      <Link>Abstract\ISignAlgorithm.cs</Link>
-    </Compile>
-    <Compile Include="..\Transport\Abstract\IStreamGetter.cs">
-      <Link>Abstract\IStreamGetter.cs</Link>
-    </Compile>
-    <Compile Include="..\Transport\Ambient\BufferProvider.cs">
-      <Link>Ambient\BufferProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\Transport\Ambient\TempProvider.cs">
-      <Link>Ambient\TempProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\Transport\Ambient\TimeProvider.cs">
-      <Link>Ambient\TimeProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\Transport\Consts.cs">
-      <Link>Consts.cs</Link>
-    </Compile>
-    <Compile Include="..\Transport\DataPackReader.cs">
-      <Link>DataPackReader.cs</Link>
-    </Compile>
-    <Compile Include="..\Transport\Funcs.cs">
-      <Link>Funcs.cs</Link>
-    </Compile>
-    <Compile Include="..\Transport\FuncStreamGetter.cs">
-      <Link>FuncStreamGetter.cs</Link>
-    </Compile>
-    <Compile Include="..\Transport\OfflineDataPackWriter.cs">
-      <Link>OfflineDataPackWriter.cs</Link>
-    </Compile>
-    <Compile Include="..\Transport\DataPair.cs">
-      <Link>DataPair.cs</Link>
-    </Compile>
-    <Compile Include="..\Transport\DataPack.cs">
-      <Link>DataPack.cs</Link>
-    </Compile>
-    <Compile Include="..\Transport\DataPart.cs">
-      <Link>DataPart.cs</Link>
-    </Compile>
-    <Compile Include="..\Transport\OfflineDataPackReader.cs">
-      <Link>OfflineDataPackReader.cs</Link>
-    </Compile>
-    <Compile Include="..\Transport\OnlineDataPackReader.cs">
-      <Link>OnlineDataPackReader.cs</Link>
-    </Compile>
-    <Compile Include="..\Transport\OnlineStreamGetter.cs">
-      <Link>OnlineStreamGetter.cs</Link>
-    </Compile>
-    <Compile Include="..\Transport\RsaKeyGenerator.cs">
-      <Link>RsaKeyGenerator.cs</Link>
-    </Compile>
-    <Compile Include="..\Transport\RsaSignAlgorithm.cs">
-      <Link>RsaSignAlgorithm.cs</Link>
-    </Compile>
-    <Compile Include="..\Transport\Signer.cs">
-      <Link>Signer.cs</Link>
-    </Compile>
-    <Compile Include="..\Transport\StringExtension.cs">
-      <Link>StringExtension.cs</Link>
-    </Compile>
-    <Compile Include="..\Transport\TempFileStreamGetter.cs">
-      <Link>TempFileStreamGetter.cs</Link>
-    </Compile>
-    <Compile Include="..\Transport\FilteredStream.cs">
-      <Link>FilteredStream.cs</Link>
-    </Compile>
-    <Compile Include="..\Transport\NonClosingStreamWrapper.cs">
-      <Link>NonClosingStreamWrapper.cs</Link>
-    </Compile>
-    <Compile Include="..\Transport\Properties.cs">
-      <Link>Properties.cs</Link>
-    </Compile>
-    <Compile Include="..\Transport\Headers.cs">
-      <Link>Headers.cs</Link>
-    </Compile>
-    <Compile Include="..\Transport\TempFile.cs">
-      <Link>TempFile.cs</Link>
-    </Compile>
-    <Compile Include="..\Transport\TransportSerializer.cs">
-      <Link>TransportSerializer.cs</Link>
-    </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="..\Transport\**\*.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Transport.snk" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

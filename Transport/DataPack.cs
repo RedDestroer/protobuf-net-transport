@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using ProtoBuf.Transport.Ambient;
 
 namespace ProtoBuf.Transport
@@ -11,6 +12,7 @@ namespace ProtoBuf.Transport
         private readonly byte _prefixSize;
 
         public DataPack(byte[] dataPrefix = null)
+            : this()
         {
             if (dataPrefix != null && dataPrefix.Length > 255)
                 throw new InvalidDataException("Length of dataPrefix must be in range from 0 to 255");
@@ -19,6 +21,32 @@ namespace ProtoBuf.Transport
             _prefixSize = _dataPrefix == null
                 ? (byte)0
                 : (byte)_dataPrefix.Length;
+        }
+
+        public DataPack(string dataPrefix = null)
+            : this()
+        {
+            if (dataPrefix != null)
+            {
+                var bytes = Encoding.UTF8.GetBytes(dataPrefix);
+
+                if (bytes.Length > 255)
+                    throw new InvalidDataException("Length of dataPrefix must be in range from 0 to 255");
+
+                _dataPrefix = bytes;
+            }
+            else
+            {
+                _dataPrefix = null;
+            }
+
+            _prefixSize = _dataPrefix == null
+                ? (byte)0
+                : (byte)_dataPrefix.Length;
+        }
+
+        private DataPack()
+        {
             Headers = new Headers();
             Properties = new Properties();
             DataParts = new List<DataPart>();
@@ -34,6 +62,8 @@ namespace ProtoBuf.Transport
         public byte PrefixSize { get { return _prefixSize; } }
 
         public DateTime? DateCreate { get; set; }
+
+        public string Description { get; set; }
 
         public byte[] GetPrefix()
         {

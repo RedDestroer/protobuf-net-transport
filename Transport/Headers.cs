@@ -7,7 +7,7 @@ namespace ProtoBuf.Transport
     public class Headers
         : IList<DataPair>
     {
-        private IList<DataPair> _dataPairs;
+        private readonly IList<DataPair> _dataPairs;
 
         public Headers()
         {

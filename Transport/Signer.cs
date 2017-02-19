@@ -26,7 +26,7 @@ namespace ProtoBuf.Transport
             if (!destinationStream.CanWrite)
                 throw new InvalidOperationException("Destination stream doesn't support writing.");
             
-            sourceStream.Seek(prefixSize, SeekOrigin.Current);
+            sourceStream.Seek(prefixSize + 1, SeekOrigin.Current);
             int isSignedByte = sourceStream.ReadByte();
             if (isSignedByte == 1)
                 throw new InvalidOperationException("Source stream already signed.");
@@ -37,7 +37,7 @@ namespace ProtoBuf.Transport
             try
             {
                 int byteCount;
-                uint prefixBytesLeft = prefixSize;
+                uint prefixBytesLeft = prefixSize + 1;
                 while ((byteCount = sourceStream.Read(buffer, 0, (int)Math.Min(buffer.Length, prefixBytesLeft))) > 0)
                 {
                     destinationStream.Write(buffer, 0, byteCount);
@@ -102,7 +102,7 @@ namespace ProtoBuf.Transport
             if (!stream.CanRead)
                 throw new InvalidOperationException("Stream doesn't support reading.");
 
-            stream.Seek(prefixSize, SeekOrigin.Current);
+            stream.Seek(prefixSize + 1, SeekOrigin.Current);
             int isSignedByte = stream.ReadByte();
             if (isSignedByte == 1)
                 return true;
@@ -122,7 +122,7 @@ namespace ProtoBuf.Transport
 
             long position = stream.Position;
 
-            stream.Seek(prefixSize, SeekOrigin.Current);
+            stream.Seek(prefixSize + 1, SeekOrigin.Current);
             int isSignedByte = stream.ReadByte();
             if (isSignedByte == 0)
                 throw new InvalidOperationException("Stream is not signed.");
@@ -159,7 +159,7 @@ namespace ProtoBuf.Transport
                 using (var br = new BinaryReader(wrapper))
                 {
                     int byteCount;
-                    uint prefixBytesLeft = prefixSize;
+                    uint prefixBytesLeft = prefixSize + 1;
                     while ((byteCount = wrapper.Read(buffer, 0, (int)Math.Min(buffer.Length, prefixBytesLeft))) > 0)
                     {
                         destinationStream.Write(buffer, 0, byteCount);
