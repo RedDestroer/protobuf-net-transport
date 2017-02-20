@@ -37,15 +37,29 @@ namespace ProtoBuf.Transport
             }
         }
 
-        public static void Serialize(DataPack dataPack, Stream stream)
+        public static void Serialize(DataPack dataPack, Stream stream, ISignAlgorithm signAlgorithm = null)
         {
             if (dataPack == null) throw new ArgumentNullException("dataPack");
             if (stream == null) throw new ArgumentNullException("stream");
 
-            DataPackWriter.Write(stream, dataPack);
+            DataPackWriter.Write(dataPack, stream, signAlgorithm);
         }
 
-        public static DataPack Deserialize(Stream stream, byte[] prefix = null)
+        public static DataPack Deserialize(Stream stream)
+        {
+            if (stream == null) throw new ArgumentNullException("stream");
+
+            return Deserialize(stream, (string)null);
+        }
+
+        public static DataPack Deserialize(Stream stream, byte[] prefix)
+        {
+            if (stream == null) throw new ArgumentNullException("stream");
+
+            return DataPackReader.Read(stream, prefix);
+        }
+
+        public static DataPack Deserialize(Stream stream, string prefix)
         {
             if (stream == null) throw new ArgumentNullException("stream");
 

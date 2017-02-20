@@ -5,7 +5,7 @@ using ProtoBuf.Transport;
 namespace Transport.Tests
 {
     [TestClass]
-    public class DataPairTests
+    public class DataPairTest
     {
         [TestMethod]
         public void Constructor_WithEmptyConstructor_MustCreateObject()

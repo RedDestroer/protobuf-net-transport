@@ -51,9 +51,6 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-
-
-
   <ItemGroup Condition="'$(Configuration)' != 'Debug' AND '$(Configuration)' != 'Release'">
     <Reference Include="protobuf-net">
       <HintPath>..\Temp\NET40-sm\protobuf-net.dll</HintPath>
@@ -63,7 +60,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
-
   <ItemGroup Condition="'$(Configuration)' == 'Debug' OR '$(Configuration)' == 'Release'">
     <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
       <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
@@ -87,6 +83,7 @@
     <Compile Include="Ambient\TimeProvider.cs" />
     <Compile Include="Consts.cs" />
     <Compile Include="DataPackReader.cs" />
+    <Compile Include="Delegates.cs" />
     <Compile Include="Funcs.cs" />
     <Compile Include="FuncStreamGetter.cs" />
     <Compile Include="OfflineDataPackWriter.cs" />

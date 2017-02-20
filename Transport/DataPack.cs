@@ -11,6 +11,14 @@ namespace ProtoBuf.Transport
         private readonly byte[] _dataPrefix;
         private readonly byte _prefixSize;
 
+        public DataPack()
+        {
+            Headers = new Headers();
+            Properties = new Properties();
+            DataParts = new List<DataPart>();
+            DateCreate = TimeProvider.Current.Now;
+        }
+
         public DataPack(byte[] dataPrefix = null)
             : this()
         {
@@ -43,14 +51,6 @@ namespace ProtoBuf.Transport
             _prefixSize = _dataPrefix == null
                 ? (byte)0
                 : (byte)_dataPrefix.Length;
-        }
-
-        private DataPack()
-        {
-            Headers = new Headers();
-            Properties = new Properties();
-            DataParts = new List<DataPart>();
-            DateCreate = TimeProvider.Current.Now;
         }
 
         public Headers Headers { get; private set; }
