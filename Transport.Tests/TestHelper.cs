@@ -532,6 +532,19 @@ namespace Transport.Tests
             return method.Invoke(null, BindingFlags.Public | BindingFlags.Static, Type.DefaultBinder, null, CultureInfo.InvariantCulture);
         }
 
+        public static void WriteAllBytes(string fullFileName, Stream stream)
+        {
+            var pos = stream.Position;
+            stream.Position = 0;
+            using (var output = new FileStream(fullFileName, FileMode.Create, FileAccess.Write, FileShare.None))
+            {
+                stream.CopyTo(output);
+                output.Flush();
+            }
+
+            stream.Position = pos;
+        }
+
         private static List<Type> GetTypes()
         {
             var assembly = Assembly.GetAssembly(typeof(TestHelper));

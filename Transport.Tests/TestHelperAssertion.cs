@@ -42,6 +42,7 @@ namespace Transport.Tests
             public static void AreEqual(DataPack expected, DataPack actual)
             {
                 Assert.AreEqual(expected.PrefixSize, actual.PrefixSize);
+                AreEqual(expected.GetPrefix(), actual.GetPrefix());
                 Assert.AreEqual(expected.DateCreate, actual.DateCreate);
                 Assert.AreEqual(expected.Description, actual.Description);
                 AreEqual(expected.Headers, actual.Headers);

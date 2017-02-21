@@ -23,7 +23,7 @@ namespace Transport.Tests
         }
 
         [TestMethod]
-        public void Write_DataPackWithAllPartsFilles_GetsExpectedStream()
+        public void Write_DataPackWithAllPartsFilled_GetsExpectedStream()
         {
             var target = new OfflineDataPackWriter();
             var dataPack = TestHelper.Defaults.DataPack2();
@@ -33,8 +33,8 @@ namespace Transport.Tests
             {
                 target.Write(dataPack, actual);
 
-                ////WriteAllBytes(@"W:\Temp\expected.bin", expected);
-                ////WriteAllBytes(@"W:\Temp\actual.bin", actual);
+                ////TestHelper.WriteAllBytes(@"X:\Temp\expected.bin", expected);
+                ////TestHelper.WriteAllBytes(@"X:\Temp\actual.bin", actual);
 
                 TestHelper.Assertion.AreEqual(expected, actual);
             }
@@ -51,24 +51,11 @@ namespace Transport.Tests
             {
                 target.Write(dataPack, actual);
 
-                ////WriteAllBytes(@"W:\Temp\expected.bin", expected);
-                ////WriteAllBytes(@"W:\Temp\actual.bin", actual);
+                ////TestHelper.WriteAllBytes(@"X:\Temp\expected.bin", expected);
+                ////TestHelper.WriteAllBytes(@"X:\Temp\actual.bin", actual);
 
                 TestHelper.Assertion.AreEqual(expected, actual);
             }
-        }
-
-        private void WriteAllBytes(string fullFileName, Stream stream)
-        {
-            var pos = stream.Position;
-            stream.Position = 0;
-            using (var output = new FileStream(fullFileName, FileMode.Create, FileAccess.Write, FileShare.None))
-            {
-                stream.CopyTo(output);
-                output.Flush();
-            }
-
-            stream.Position = pos;
         }
     }
 }

@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using ProtoBuf.Transport.Abstract;
 
 namespace ProtoBuf.Transport
 {
+    [DebuggerDisplay("Headers = {Headers.Count}, Properties = {Properties.Count}")]
     public class DataPart
     {
         private readonly IStreamGetter _streamGetter;

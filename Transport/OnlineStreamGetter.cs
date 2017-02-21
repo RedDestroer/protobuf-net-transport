@@ -18,6 +18,8 @@ namespace ProtoBuf.Transport
 
         public Stream CreateStream()
         {
+            _stream.Position = 0;
+
             return _stream;
         }
     }

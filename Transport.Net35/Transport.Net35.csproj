@@ -26,11 +26,11 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\Output\Net35\</OutputPath>
     <DefineConstants>TRACE;NET35 FEAT_SERVICEMODEL</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\protobuf-net-transport.xml</DocumentationFile>
+    <DocumentationFile>..\Output\Net35\protobuf-net-transport.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -48,9 +48,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release_WO_SM|AnyCPU'">
-    <OutputPath>bin\Release_WO_SM\</OutputPath>
+    <OutputPath>..\Output\Net35sm\</OutputPath>
     <DefineConstants>TRACE;NET35</DefineConstants>
-    <DocumentationFile>bin\Release\protobuf-net-transport.xml</DocumentationFile>
+    <DocumentationFile>..\Output\Net35sm\protobuf-net-transport.xml</DocumentationFile>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>

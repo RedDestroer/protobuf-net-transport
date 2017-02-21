@@ -57,9 +57,7 @@ namespace Transport.Tests
             using (var stream = new MemoryStream())
             {
                 writer.Write(expected, stream);
-
-                WriteAllBytes(@"W:\Temp\stream.bin", stream);
-
+                
                 stream.Position = 0;
                 actual = target.Read(stream, expected.GetPrefix());
             }
@@ -67,17 +65,25 @@ namespace Transport.Tests
             TestHelper.Assertion.AreEqual(expected, actual);
         }
 
-        private void WriteAllBytes(string fullFileName, Stream stream)
+        [TestMethod]
+        public void Read_SerializeAndDeserializeDataPack3_GetsExpectedDataPack()
         {
-            var pos = stream.Position;
-            stream.Position = 0;
-            using (var output = new FileStream(fullFileName, FileMode.Create, FileAccess.Write, FileShare.None))
+            var target = new OfflineDataPackReader();
+            var writer = new OfflineDataPackWriter();
+
+            DataPack expected = TestHelper.Defaults.DataPack3();
+            DataPack actual;
+            using (var stream = new MemoryStream())
             {
-                stream.CopyTo(output);
-                output.Flush();
+                writer.Write(expected, stream);
+
+                stream.Position = 0;
+                actual = target.Read(stream, expected.GetPrefix());
+
+                ////TestHelper.WriteAllBytes(@"X:\Temp\stream.bin", stream);
             }
 
-            stream.Position = pos;
+            TestHelper.Assertion.AreEqual(expected, actual);
         }
     }
 }

@@ -70,17 +70,21 @@ namespace Transport.Tests
 
             public static DataPart DataPart1()
             {
-                var stream = new MemoryStream();
-                stream.WriteByte(170);
-                stream.WriteByte(255);
-                stream.WriteByte(255);
-                stream.WriteByte(255);
-                stream.WriteByte(171);
-                stream.Position = 0;
-                
                 var stub = IStreamGetterHelper.CreateMock(MockBehavior.Strict);
                 stub.Setup(o => o.CreateStream())
-                    .Returns(stream);
+                    .Returns(
+                        () =>
+                        {
+                            var stream = new MemoryStream();
+                            stream.WriteByte(170);
+                            stream.WriteByte(255);
+                            stream.WriteByte(255);
+                            stream.WriteByte(255);
+                            stream.WriteByte(171);
+                            stream.Position = 0;
+
+                            return stream;
+                        });
 
                 var obj = DataPartHelper.Create(stub.Object, null, null);
 
@@ -89,17 +93,21 @@ namespace Transport.Tests
 
             public static DataPart DataPart2()
             {
-                var stream = new MemoryStream();
-                stream.WriteByte(170);
-                stream.WriteByte(255);
-                stream.WriteByte(255);
-                stream.WriteByte(255);
-                stream.WriteByte(171);
-                stream.Position = 0;
-
                 var stub = IStreamGetterHelper.CreateMock(MockBehavior.Strict);
                 stub.Setup(o => o.CreateStream())
-                    .Returns(stream);
+                    .Returns(
+                        () =>
+                        {
+                            var stream = new MemoryStream();
+                            stream.WriteByte(170);
+                            stream.WriteByte(255);
+                            stream.WriteByte(255);
+                            stream.WriteByte(255);
+                            stream.WriteByte(171);
+                            stream.Position = 0;
+
+                            return stream;
+                        });
 
                 var headers = new Headers();
                 headers.Add("H1", "V1");

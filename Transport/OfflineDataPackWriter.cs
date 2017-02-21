@@ -6,12 +6,21 @@ using ProtoBuf.Transport.Ambient;
 
 namespace ProtoBuf.Transport
 {
+    /// <summary>
+    /// Writer for DataPack
+    /// </summary>
     public class OfflineDataPackWriter
         : IDataPackWriter
     {
         public const byte InfoSection = 1;
         public const byte DataSection = 2;
 
+        /// <summary>
+        /// Writes <see cref="DataPack"/> to stream
+        /// </summary>
+        /// <param name="dataPack">Data</param>
+        /// <param name="stream">Stream where <see cref="DataPack"/> is written to</param>
+        /// <param name="signAlgorithm">Sign algorithm if needed</param>
         public void Write(DataPack dataPack, Stream stream, ISignAlgorithm signAlgorithm = null)
         {
             if (stream == null) throw new ArgumentNullException("stream");

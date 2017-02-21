@@ -4,6 +4,9 @@ using ProtoBuf.Transport.Abstract;
 
 namespace ProtoBuf.Transport
 {
+    /// <summary>
+    /// Offline reader for files, written in protobuf-net-transport format. It provides functionality to read data from DataParts only when source stream is sill open
+    /// </summary>
     public class OnlineDataPackReader
         : DataPackReader
     {

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace ProtoBuf.Transport
 {
+    [DebuggerDisplay("Count = {Count}")]
     public class Headers
         : IList<DataPair>
     {

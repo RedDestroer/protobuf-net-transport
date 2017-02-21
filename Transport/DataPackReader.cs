@@ -7,12 +7,21 @@ using ProtoBuf.Transport.Abstract;
 
 namespace ProtoBuf.Transport
 {
+    /// <summary>
+    /// Reader for files, written in protobuf-net-transport format
+    /// </summary>
     public abstract class DataPackReader
         : IDataPackReader
     {
         public const byte InfoSection = 1;
         public const byte DataSection = 2;
 
+        /// <summary>
+        /// Reads <see cref="DataPack"/> from stream, using prefix if provided
+        /// </summary>
+        /// <param name="stream">Stream with data to deserialize</param>
+        /// <param name="prefix">Byte array with bytes to check before deserialize</param>
+        /// <returns></returns>
         public DataPack Read(Stream stream, byte[] prefix = null)
         {
             if (stream == null) throw new ArgumentNullException("stream");
@@ -144,6 +153,12 @@ namespace ProtoBuf.Transport
             return dataPack;
         }
 
+        /// <summary>
+        /// Reads <see cref="DataPack"/> from stream, using prefix if provided
+        /// </summary>
+        /// <param name="stream">Stream with data to deserialize</param>
+        /// <param name="prefix">Byte array with bytes to check before deserialize</param>
+        /// <returns></returns>
         public DataPack Read(Stream stream, string prefix = null)
         {
             if (prefix == null)
