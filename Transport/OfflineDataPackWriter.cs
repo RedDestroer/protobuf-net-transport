@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.IO;
 using ProtoBuf.Transport.Abstract;
-using ProtoBuf.Transport.Ambient;
 
 namespace ProtoBuf.Transport
 {
@@ -206,23 +205,8 @@ namespace ProtoBuf.Transport
             }
 
             uint dataAddress = GetAddress(bw);
-            using (var sourceStream = dataPart.CreateStream())
-            {
-                var buffer = BufferProvider.Current.TakeBuffer();
-                try
-                {
-                    int byteCount;
-                    while ((byteCount = sourceStream.Read(buffer, 0, buffer.Length)) > 0)
-                    {
-                        bw.Write(buffer, 0, byteCount);
-                    }
-                }
-                finally
-                {
-                    BufferProvider.Current.ReturnBuffer(buffer);
-                }
-            }
-
+            dataPart.CopyToStream(bw.BaseStream);
+            
             uint dataSize = GetAddress(bw) - dataAddress;
             if (dataSize == 0)
                 dataAddress = 0;

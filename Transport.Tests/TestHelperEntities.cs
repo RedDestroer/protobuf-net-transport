@@ -144,7 +144,7 @@ namespace Transport.Tests
         {
             public static DataPart Create()
             {
-                return Create(IStreamGetterHelper.Create(), HeadersHelper.Create(), PropertiesHelper.Create());
+                return Create(IStreamContainerHelper.Create(), HeadersHelper.Create(), PropertiesHelper.Create());
             }
 
             public static IEnumerable<DataPart> CreateEnum()
@@ -156,9 +156,9 @@ namespace Transport.Tests
                     };
             }
 
-            public static DataPart Create(IStreamGetter streamGetter, Headers headers, Properties properties)
+            public static DataPart Create(IStreamContainer streamContainer, Headers headers, Properties properties)
             {
-                var obj = new DataPart(streamGetter);
+                var obj = new DataPart(streamContainer);
 
                 if (headers != null)
                 {
@@ -253,20 +253,20 @@ namespace Transport.Tests
             }
         }
 
-        public class IStreamGetterHelper
+        public class IStreamContainerHelper
         {
-            public static IStreamGetter Create()
+            public static IStreamContainer Create()
             {
                 return CreateMock(MockBehavior.Default)
                     .Object;
             }
 
-            public static Mock<IStreamGetter> CreateMock(MockBehavior mockBehavior)
+            public static Mock<IStreamContainer> CreateMock(MockBehavior mockBehavior)
             {
-                return new Mock<IStreamGetter>();
+                return new Mock<IStreamContainer>();
             }
 
-            public static IEnumerable<IStreamGetter> CreateEnum()
+            public static IEnumerable<IStreamContainer> CreateEnum()
             {
                 return new[]
                     {

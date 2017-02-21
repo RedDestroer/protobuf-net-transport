@@ -64,7 +64,7 @@ namespace Transport.Tests
             {
                 AreEqual(expected.Headers, actual.Headers);
                 AreEqual(expected.Properties, actual.Properties);
-                AreEqual(expected.CreateStream(), actual.CreateStream());
+                AreEqual(expected.GetStream(), actual.GetStream());
             }
 
             public static void AreEqual(Properties expected, Properties actual)

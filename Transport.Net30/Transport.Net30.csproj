@@ -73,7 +73,44 @@
     <Reference Include="System.ServiceModel" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Transport\**\*.cs" />
+    <Compile Include="..\Transport\Abstract\IDataPackReader.cs" />
+    <Compile Include="..\Transport\Abstract\IDataPackWriter.cs" />
+    <Compile Include="..\Transport\Abstract\ISignAlgorithm.cs" />
+    <Compile Include="..\Transport\Abstract\IStreamContainer.cs">
+      <Link>IStreamContainer.cs</Link>
+    </Compile>
+    <Compile Include="..\Transport\Ambient\BufferProvider.cs" />
+    <Compile Include="..\Transport\Ambient\TempProvider.cs" />
+    <Compile Include="..\Transport\Ambient\TimeProvider.cs" />
+    <Compile Include="..\Transport\Consts.cs" />
+    <Compile Include="..\Transport\DataPack.cs" />
+    <Compile Include="..\Transport\DataPackReader.cs" />
+    <Compile Include="..\Transport\DataPair.cs" />
+    <Compile Include="..\Transport\DataPart.cs" />
+    <Compile Include="..\Transport\FilteredStream.cs" />
+    <Compile Include="..\Transport\Funcs.cs" />
+    <Compile Include="..\Transport\FuncStreamContainer.cs">
+      <Link>FuncStreamContainer.cs</Link>
+    </Compile>
+    <Compile Include="..\Transport\Headers.cs" />
+    <Compile Include="..\Transport\NonClosingStreamWrapper.cs" />
+    <Compile Include="..\Transport\OfflineDataPackReader.cs" />
+    <Compile Include="..\Transport\OfflineDataPackWriter.cs" />
+    <Compile Include="..\Transport\OnlineDataPackReader.cs" />
+    <Compile Include="..\Transport\OnlineStreamContainer.cs">
+      <Link>OnlineStreamContainer.cs</Link>
+    </Compile>
+    <Compile Include="..\Transport\Properties.cs" />
+    <Compile Include="..\Transport\Properties\AssemblyInfo.cs" />
+    <Compile Include="..\Transport\RsaKeyGenerator.cs" />
+    <Compile Include="..\Transport\RsaSignAlgorithm.cs" />
+    <Compile Include="..\Transport\Signer.cs" />
+    <Compile Include="..\Transport\StringExtension.cs" />
+    <Compile Include="..\Transport\TempFile.cs" />
+    <Compile Include="..\Transport\TempFileStreamContainer.cs">
+      <Link>TempFileStreamContainer.cs</Link>
+    </Compile>
+    <Compile Include="..\Transport\TransportSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

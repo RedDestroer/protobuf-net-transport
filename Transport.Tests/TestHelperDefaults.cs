@@ -70,8 +70,8 @@ namespace Transport.Tests
 
             public static DataPart DataPart1()
             {
-                var stub = IStreamGetterHelper.CreateMock(MockBehavior.Strict);
-                stub.Setup(o => o.CreateStream())
+                var stub = IStreamContainerHelper.CreateMock(MockBehavior.Strict);
+                stub.Setup(o => o.GetStream())
                     .Returns(
                         () =>
                         {
@@ -85,6 +85,15 @@ namespace Transport.Tests
 
                             return stream;
                         });
+                stub.Setup(o => o.CopyToStream(It.IsAny<Stream>()))
+                    .Callback<Stream>(output =>
+                    {
+                        output.WriteByte(170);
+                        output.WriteByte(255);
+                        output.WriteByte(255);
+                        output.WriteByte(255);
+                        output.WriteByte(171);
+                    });
 
                 var obj = DataPartHelper.Create(stub.Object, null, null);
 
@@ -93,8 +102,8 @@ namespace Transport.Tests
 
             public static DataPart DataPart2()
             {
-                var stub = IStreamGetterHelper.CreateMock(MockBehavior.Strict);
-                stub.Setup(o => o.CreateStream())
+                var stub = IStreamContainerHelper.CreateMock(MockBehavior.Strict);
+                stub.Setup(o => o.GetStream())
                     .Returns(
                         () =>
                         {
@@ -108,6 +117,15 @@ namespace Transport.Tests
 
                             return stream;
                         });
+                stub.Setup(o => o.CopyToStream(It.IsAny<Stream>()))
+                    .Callback<Stream>(output =>
+                    {
+                        output.WriteByte(170);
+                        output.WriteByte(255);
+                        output.WriteByte(255);
+                        output.WriteByte(255);
+                        output.WriteByte(171);
+                    });
 
                 var headers = new Headers();
                 headers.Add("H1", "V1");
@@ -121,6 +139,9 @@ namespace Transport.Tests
 
                 return obj;
             }
+
+            
+
 
             /// <summary>
             /// Stream of DataPack2()

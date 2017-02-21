@@ -8,13 +8,13 @@ namespace ProtoBuf.Transport
     [DebuggerDisplay("Headers = {Headers.Count}, Properties = {Properties.Count}")]
     public class DataPart
     {
-        private readonly IStreamGetter _streamGetter;
+        private readonly IStreamContainer _streamContainer;
 
-        public DataPart(IStreamGetter streamGetter)
+        public DataPart(IStreamContainer streamContainer)
         {
-            if (streamGetter == null) throw new ArgumentNullException("streamGetter");
+            if (streamContainer == null) throw new ArgumentNullException("streamContainer");
 
-            _streamGetter = streamGetter;
+            _streamContainer = streamContainer;
             Headers = new Headers();
             Properties = new Properties();
         }
@@ -23,9 +23,16 @@ namespace ProtoBuf.Transport
 
         public Properties Properties { get; private set; }
 
-        public Stream CreateStream()
+        public Stream GetStream()
         {
-            return _streamGetter.CreateStream();
+            return _streamContainer.GetStream();
+        }
+
+        public void CopyToStream(Stream stream)
+        {
+            if (stream == null) throw new ArgumentNullException("stream");
+
+            _streamContainer.CopyToStream(stream);
         }
     }
 }
