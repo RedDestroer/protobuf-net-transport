@@ -27,45 +27,21 @@ namespace ProtoBuf.Transport
             using (var wrapper = new NonClosingStreamWrapper(stream)) // To prevent source stream from closing by BinaryReader
             using (var br = new BinaryReader(wrapper))
             {
-                long pos = wrapper.Position;
-                byte prefixSize = 0;
+                byte prefixSize = br.ReadByte();
                 byte[] dataPrefix = null;
-
-                if (prefix != null)
+                if (prefixSize > 0)
                 {
-                    prefixSize = (byte)prefix.Length;
                     dataPrefix = br.ReadBytes(prefixSize);
                 }
-                else
-                {
-                    bool found = false;
-                    for (byte i = 0; i < 255; i++)
+
+                dataPack = new DataPack(dataPrefix)
                     {
-                        if (br.ReadByte() == 255)
-                        {
-                            prefixSize = i;
-                            found = true;
-                            break;
-                        }
-                    }
-                    
-                    if (!found)
-                        throw new InvalidOperationException("Can't find end of the prefix.");
+                        DateCreate = null,
+                        Description = null
+                    };
 
-                    wrapper.Position = pos;
-                    if (prefixSize > 0)
-                    {
-                        dataPrefix = br.ReadBytes(prefixSize);
-                    }
-                }
-
-                dataPack = new DataPack(dataPrefix);
-
-                if (!dataPack.IsPrefixMatch(dataPrefix))
+                if (!dataPack.IsPrefixMatch(prefix))
                     throw new InvalidOperationException("Data prefix is wrong.");
-
-                if (br.ReadByte() != 255)
-                    throw new InvalidOperationException("End of the prefix contains wrong byte.");
 
                 byte isSignedByte = br.ReadByte();
                 switch (isSignedByte)
@@ -91,7 +67,7 @@ namespace ProtoBuf.Transport
                 ushort propertiesCount = br.ReadUInt16();
 
                 var implicitProperties = new Properties();
-                using (var filter = new FilteredStream(wrapper, br.BaseStream.Position, size - 2))
+                using (var filter = new FilteredStream(wrapper, wrapper.Position, size - 2))
                 {
                     for (ushort i = 0; i < propertiesCount; i++)
                     {

@@ -83,7 +83,6 @@
     <Compile Include="Ambient\TimeProvider.cs" />
     <Compile Include="Consts.cs" />
     <Compile Include="DataPackReader.cs" />
-    <Compile Include="Delegates.cs" />
     <Compile Include="Funcs.cs" />
     <Compile Include="FuncStreamGetter.cs" />
     <Compile Include="OfflineDataPackWriter.cs" />

@@ -95,11 +95,15 @@ namespace ProtoBuf.Transport
 
         public bool IsPrefixMatch(byte[] dataPrefix)
         {
-            if (dataPrefix == null) throw new ArgumentNullException("dataPrefix");
+            if (dataPrefix == null && PrefixSize <= 0)
+                return true;
+            if (dataPrefix == null && PrefixSize > 0)
+                return false;
 
+            // ReSharper disable once PossibleNullReferenceException
             if (dataPrefix.Length != PrefixSize)
                 return false;
-            if (PrefixSize < 1)
+            if (PrefixSize <= 0)
                 return true;
 
             for (int i = 0; i < PrefixSize; i++)

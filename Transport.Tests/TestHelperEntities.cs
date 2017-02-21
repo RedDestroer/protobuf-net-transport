@@ -144,7 +144,7 @@ namespace Transport.Tests
         {
             public static DataPart Create()
             {
-                return Create(IStreamGetterHelper.Create());
+                return Create(IStreamGetterHelper.Create(), HeadersHelper.Create(), PropertiesHelper.Create());
             }
 
             public static IEnumerable<DataPart> CreateEnum()
@@ -156,9 +156,25 @@ namespace Transport.Tests
                     };
             }
 
-            public static DataPart Create(IStreamGetter streamGetter)
+            public static DataPart Create(IStreamGetter streamGetter, Headers headers, Properties properties)
             {
                 var obj = new DataPart(streamGetter);
+
+                if (headers != null)
+                {
+                    foreach (var header in headers)
+                    {
+                        obj.Headers.Add(header);
+                    }
+                }
+
+                if (properties != null)
+                {
+                    foreach (var property in properties.GetPropertiesList())
+                    {
+                        obj.Properties.AddOrReplace(property);
+                    }
+                }
 
                 return obj;
             }

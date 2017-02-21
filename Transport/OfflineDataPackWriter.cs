@@ -12,24 +12,6 @@ namespace ProtoBuf.Transport
         public const byte InfoSection = 1;
         public const byte DataSection = 2;
 
-        private SerializationMethod _serializationMethod;
-
-        public OfflineDataPackWriter()
-        {
-            _serializationMethod = SerializationMethodInner;
-        }
-
-        public SerializationMethod SerializationMethod
-        {
-            get { return _serializationMethod; }
-            set
-            {
-                if (value == null) throw new ArgumentNullException("value");
-
-                _serializationMethod = value;
-            }
-        }
-
         public void Write(DataPack dataPack, Stream stream, ISignAlgorithm signAlgorithm = null)
         {
             if (stream == null) throw new ArgumentNullException("stream");
@@ -43,10 +25,11 @@ namespace ProtoBuf.Transport
             using (var wrapper = new NonClosingStreamWrapper(stream)) // To prevent source stream from closing by BinaryWriter
             using (var bw = new BinaryWriter(wrapper))
             {
+                // Size of prefix
+                bw.Write(dataPack.PrefixSize);
+
                 // Prefix of data
                 bw.Write(dataPack.GetPrefix(), 0, dataPack.PrefixSize);
-
-                bw.Write((byte)255);
 
                 uint signInfoAddress = 0;
                 uint dataSizeAddress = 0;
@@ -82,7 +65,7 @@ namespace ProtoBuf.Transport
 
                 for (ushort i = 0; i < cnt; i++)
                 {
-                    SerializationMethod(wrapper, properties[i]);
+                    Serializer.SerializeWithLengthPrefix(wrapper, properties[i], PrefixStyle.Base128);
                 }
 
                 WriteSize(bw, address, address + 4);
@@ -96,7 +79,7 @@ namespace ProtoBuf.Transport
 
                 for (ushort i = 0; i < cnt; i++)
                 {
-                    SerializationMethod(wrapper, dataPack.Headers[i]);
+                    Serializer.SerializeWithLengthPrefix(wrapper, dataPack.Headers[i], PrefixStyle.Base128);
                 }
 
                 WriteSize(bw, address, address + 4);
@@ -111,7 +94,7 @@ namespace ProtoBuf.Transport
 
                 for (ushort i = 0; i < cnt; i++)
                 {
-                    SerializationMethod(wrapper, properties[i]);
+                    Serializer.SerializeWithLengthPrefix(wrapper, properties[i], PrefixStyle.Base128);
                 }
 
                 WriteSize(bw, address, address + 4);
@@ -188,7 +171,7 @@ namespace ProtoBuf.Transport
             ushort headersCount = (ushort)headers.Count;
             for (ushort i = 0; i < headersCount; i++)
             {
-                SerializationMethod(bw.BaseStream, headers[i]);
+                Serializer.SerializeWithLengthPrefix(bw.BaseStream, headers[i], PrefixStyle.Base128);
             }
             uint headersEndAddress = GetAddress(bw);
             uint headersSize = headersEndAddress - headersAddress;
@@ -203,7 +186,7 @@ namespace ProtoBuf.Transport
             var propertiesCount = (ushort)properties.Count;
             for (ushort i = 0; i < propertiesCount; i++)
             {
-                SerializationMethod(bw.BaseStream, properties[i]);
+                Serializer.SerializeWithLengthPrefix(bw.BaseStream, properties[i], PrefixStyle.Base128);
             }
             uint propertiesEndAddress = GetAddress(bw);
             uint propertiesSize = propertiesEndAddress - propertiesAddress;
@@ -265,11 +248,6 @@ namespace ProtoBuf.Transport
             uint position = (uint)bw.BaseStream.Position;
 
             return position;
-        }
-
-        private void SerializationMethodInner(Stream stream, object obj)
-        {
-            Serializer.SerializeWithLengthPrefix(stream, obj, PrefixStyle.Base128);
         }
     }
 }

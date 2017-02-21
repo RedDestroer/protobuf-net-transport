@@ -31,6 +31,11 @@ namespace ProtoBuf.Transport
             AddDataPairs(dataPairs);
         }
 
+        public int Count
+        {
+            get { return _dataPairs.Count; }
+        }
+
         public string this[string propertyName]
         {
             get { return GetPropertyValue(propertyName); }
