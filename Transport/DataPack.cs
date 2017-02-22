@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using ProtoBuf.Transport.Abstract;
 using ProtoBuf.Transport.Ambient;
 
 namespace ProtoBuf.Transport
@@ -113,6 +114,49 @@ namespace ProtoBuf.Transport
             }
 
             return true;
+        }
+
+        public DataPair AddHeader(string name, string value = null)
+        {
+            var dataPair = new DataPair(name, value);
+
+            Headers.Add(dataPair);
+
+            return dataPair;
+        }
+
+        public DataPair AddProperty(string name, string value = null)
+        {
+            var dataPair = new DataPair(name, value);
+
+            Properties.AddOrReplace(dataPair);
+
+            return dataPair;
+        }
+
+        public DataPart AddDataPart(IStreamContainer streamContainer)
+        {
+            if (streamContainer == null) throw new ArgumentNullException("streamContainer");
+
+            var dataPart = new DataPart(streamContainer);
+
+            DataParts.Add(dataPart);
+
+            return dataPart;
+        }
+
+        public DataPart AddDataPart(DataPart dataPart)
+        {
+            if (dataPart == null) throw new ArgumentNullException("dataPart");
+
+            DataParts.Add(dataPart);
+
+            return dataPart;
+        }
+
+        public DataPart GetDataPart(int index)
+        {
+            return DataParts[index];
         }
     }
 }
