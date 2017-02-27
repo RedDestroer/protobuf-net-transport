@@ -7,13 +7,13 @@ namespace ProtoBuf.Transport
     /// Key value storage for one pair of data
     /// </summary>
     [DebuggerDisplay(@"\{ ""Name"": {Name}, ""Value"": {Value} \}")]
-    [ProtoContract]
+    [ProtoContract(SkipConstructor = true)]
     public class DataPair
     {
         /// <summary>
         /// Initializes new instance of <see cref="DataPair"/>. Defaul constructo used only for deserialization purposes.
         /// </summary>
-        public DataPair()
+        private DataPair()
         {
         }
 
