@@ -64,7 +64,15 @@ namespace Transport.Tests
             {
                 AreEqual(expected.Headers, actual.Headers);
                 AreEqual(expected.Properties, actual.Properties);
-                AreEqual(expected.GetStream(), actual.GetStream());
+
+                using (var expectedStream = new MemoryStream())
+                using (var actualStream = new MemoryStream())
+                {
+                    expected.CopyToStream(expectedStream);
+                    actual.CopyToStream(actualStream);
+
+                    AreEqual(expectedStream, actualStream);
+                }
             }
 
             public static void AreEqual(Properties expected, Properties actual)

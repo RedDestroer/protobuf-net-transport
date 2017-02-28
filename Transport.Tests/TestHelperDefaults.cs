@@ -71,20 +71,6 @@ namespace Transport.Tests
             public static DataPart DataPart1()
             {
                 var stub = IStreamContainerHelper.CreateMock(MockBehavior.Strict);
-                stub.Setup(o => o.GetStream())
-                    .Returns(
-                        () =>
-                        {
-                            var stream = new MemoryStream();
-                            stream.WriteByte(170);
-                            stream.WriteByte(255);
-                            stream.WriteByte(255);
-                            stream.WriteByte(255);
-                            stream.WriteByte(171);
-                            stream.Position = 0;
-
-                            return stream;
-                        });
                 stub.Setup(o => o.CopyToStream(It.IsAny<Stream>()))
                     .Callback<Stream>(output =>
                     {
@@ -103,20 +89,6 @@ namespace Transport.Tests
             public static DataPart DataPart2()
             {
                 var stub = IStreamContainerHelper.CreateMock(MockBehavior.Strict);
-                stub.Setup(o => o.GetStream())
-                    .Returns(
-                        () =>
-                        {
-                            var stream = new MemoryStream();
-                            stream.WriteByte(170);
-                            stream.WriteByte(255);
-                            stream.WriteByte(255);
-                            stream.WriteByte(255);
-                            stream.WriteByte(171);
-                            stream.Position = 0;
-
-                            return stream;
-                        });
                 stub.Setup(o => o.CopyToStream(It.IsAny<Stream>()))
                     .Callback<Stream>(output =>
                     {

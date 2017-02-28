@@ -156,9 +156,9 @@ namespace Transport.Tests
                     };
             }
 
-            public static DataPart Create(IStreamContainer streamContainer, Headers headers, Properties properties)
+            public static DataPart Create(IDataContainer dataContainer, Headers headers, Properties properties)
             {
-                var obj = new DataPart(streamContainer);
+                var obj = new DataPart(dataContainer);
 
                 if (headers != null)
                 {
@@ -255,18 +255,18 @@ namespace Transport.Tests
 
         public class IStreamContainerHelper
         {
-            public static IStreamContainer Create()
+            public static IDataContainer Create()
             {
                 return CreateMock(MockBehavior.Default)
                     .Object;
             }
 
-            public static Mock<IStreamContainer> CreateMock(MockBehavior mockBehavior)
+            public static Mock<IDataContainer> CreateMock(MockBehavior mockBehavior)
             {
-                return new Mock<IStreamContainer>();
+                return new Mock<IDataContainer>();
             }
 
-            public static IEnumerable<IStreamContainer> CreateEnum()
+            public static IEnumerable<IDataContainer> CreateEnum()
             {
                 return new[]
                     {

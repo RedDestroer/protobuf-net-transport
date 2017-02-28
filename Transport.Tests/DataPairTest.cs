@@ -8,12 +8,6 @@ namespace Transport.Tests
     public class DataPairTest
     {
         [TestMethod]
-        public void Constructor_WithEmptyConstructor_MustCreateObject()
-        {
-            new DataPair();
-        }
-
-        [TestMethod]
         public void Constructor_WithSomeName_MustCreateObject()
         {
             new DataPair(TestHelper.NextString());
@@ -47,28 +41,6 @@ namespace Transport.Tests
         public void Constructor_WithNullValue_MustCreateObject()
         {
             new DataPair(TestHelper.NextString(), null);
-        }
-
-        [TestMethod]
-        public void Name_FromDefaultConstructor_Null()
-        {
-            var target = new DataPair();
-
-            string expected = null;
-            string actual = target.Name;
-
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestMethod]
-        public void Value_FromDefaultConstructor_Null()
-        {
-            var target = new DataPair();
-
-            string expected = null;
-            string actual = target.Value;
-
-            Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]

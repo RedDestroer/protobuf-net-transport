@@ -134,11 +134,11 @@ namespace ProtoBuf.Transport
             return dataPair;
         }
 
-        public DataPart AddDataPart(IStreamContainer streamContainer)
+        public DataPart AddDataPart(IDataContainer dataContainer)
         {
-            if (streamContainer == null) throw new ArgumentNullException("streamContainer");
+            if (dataContainer == null) throw new ArgumentNullException("dataContainer");
 
-            var dataPart = new DataPart(streamContainer);
+            var dataPart = new DataPart(dataContainer);
 
             DataParts.Add(dataPart);
 

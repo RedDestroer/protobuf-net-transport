@@ -15,13 +15,13 @@ namespace ProtoBuf.Transport
             var stream = br.BaseStream;
             foreach (var dataPartInfo in dataPartInfos)
             {
-                IStreamContainer streamContainer;
+                IDataContainer dataContainer;
                 using (var filteredStream = new FilteredStream(stream, dataPartInfo.DataAddress, dataPartInfo.DataSize))
                 {
-                    streamContainer = new OnlineStreamContainer(filteredStream);
+                    dataContainer = new OnlineDataContainer(filteredStream);
                 }
 
-                var dataPart = new DataPart(streamContainer);
+                var dataPart = new DataPart(dataContainer);
 
                 if (dataPartInfo.HeadersCount > 0)
                 {
