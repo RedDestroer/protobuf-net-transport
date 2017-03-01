@@ -10,9 +10,8 @@ namespace ProtoBuf.Transport
     public class OfflineDataPackReader
         : DataPackReader
     {
-        protected override void ReadDataParts(DataPack dataPack, BinaryReader br, List<DataPartInfo> dataPartInfos)
+        protected override void ReadDataParts(DataPack dataPack, BinaryReader br, List<DataPartInfo> dataPartInfos, Stream stream)
         {
-            var stream = br.BaseStream;
             foreach (var dataPartInfo in dataPartInfos)
             {
                 IDataContainer dataContainer;

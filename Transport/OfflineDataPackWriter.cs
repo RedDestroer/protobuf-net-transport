@@ -60,6 +60,10 @@ namespace ProtoBuf.Transport
                 var implicitProperties = new Properties();
                 if (dataPack.DateCreate != null)
                     implicitProperties["DateCreate"] = dataPack.DateCreate.Value.ToString(Consts.DateTimeFormat, CultureInfo.InvariantCulture);
+                if (dataPack.FileId != null)
+                    implicitProperties["FileId"] = dataPack.FileId != null
+                        ? dataPack.FileId.Value.ToString()
+                        : null;
                 if (dataPack.Description != null)
                     implicitProperties["Description"] = dataPack.Description;
 

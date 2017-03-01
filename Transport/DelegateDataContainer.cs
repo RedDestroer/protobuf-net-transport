@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using ProtoBuf.Transport.Abstract;
 
 namespace ProtoBuf.Transport
@@ -17,6 +18,19 @@ namespace ProtoBuf.Transport
             if (streamAction == null) throw new ArgumentNullException("streamAction");
 
             _streamAction = streamAction;
+        }
+
+        /// <summary>
+        /// Returns stream, contained within
+        /// </summary>
+        /// <returns></returns>
+        public Stream GetStream()
+        {
+            var stream = new MemoryStream();
+            _streamAction(stream);
+            stream.Position = 0;
+
+            return stream;
         }
 
         /// <summary>

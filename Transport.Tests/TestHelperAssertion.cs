@@ -44,6 +44,7 @@ namespace Transport.Tests
                 Assert.AreEqual(expected.PrefixSize, actual.PrefixSize);
                 AreEqual(expected.GetPrefix(), actual.GetPrefix());
                 Assert.AreEqual(expected.DateCreate, actual.DateCreate);
+                Assert.AreEqual(expected.FileId, actual.FileId);
                 Assert.AreEqual(expected.Description, actual.Description);
                 AreEqual(expected.Headers, actual.Headers);
                 AreEqual(expected.Properties, actual.Properties);

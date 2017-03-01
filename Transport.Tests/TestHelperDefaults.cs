@@ -15,7 +15,7 @@ namespace Transport.Tests
             /// <returns></returns>
             public static DataPack DataPack1()
             {
-                var obj = DataPackHelper.Create(null, null, null, null, null, null);
+                var obj = DataPackHelper.Create(null, null, null, null, null, null, null);
 
                 return obj;
             }
@@ -56,6 +56,7 @@ namespace Transport.Tests
                 string prefix = "ABC";
                 DateTime? dateTime = new DateTime(2017, 02, 21, 11, 35, 45, 999);
                 string description = "Descr";
+                Guid fileId = Guid.Parse("A886DEA6-3964-460D-8112-187446FFD5CF");
                 
                 var headers = new Headers();
                 headers.Add("H", "V");
@@ -63,7 +64,7 @@ namespace Transport.Tests
                 var properties = new Properties();
                 properties.AddOrReplace("P", "V2");
                 
-                var obj = DataPackHelper.Create(prefix, dateTime, description, headers, properties, new [] { DataPart2() });
+                var obj = DataPackHelper.Create(prefix, dateTime, fileId, description, headers, properties, new [] { DataPart2() });
 
                 return obj;
             }
@@ -111,10 +112,7 @@ namespace Transport.Tests
 
                 return obj;
             }
-
             
-
-
             /// <summary>
             /// Stream of DataPack2()
             /// </summary>
@@ -133,8 +131,8 @@ namespace Transport.Tests
                     bw.Write((byte)0); // No sign
                     
                     bw.Write((byte)1); // Start of Info section
-                    bw.Write((uint)57); // Size of Info section
-                    bw.Write((ushort)2); // Count of inner properties
+                    bw.Write((uint)0x68); // Size of Info section
+                    bw.Write((ushort)3); // Count of inner properties
                     bw.Write((byte)0x21);
                     bw.Write((byte)0x0A);
                     bw.Write((byte)0x0A);
@@ -169,6 +167,55 @@ namespace Transport.Tests
                     bw.Write((byte)0x39);
                     bw.Write((byte)0x39);
                     bw.Write((byte)0x39);
+
+                    bw.Write((byte)0x2E);
+                    bw.Write((byte)0x0A);
+                    bw.Write((byte)0x06);
+                    bw.Write((byte)0x46);
+                    bw.Write((byte)0x69);
+                    bw.Write((byte)0x6C);
+                    bw.Write((byte)0x65);
+                    bw.Write((byte)0x49);
+                    bw.Write((byte)0x64);
+                    bw.Write((byte)0x12);
+                    bw.Write((byte)0x24);
+                    bw.Write((byte)0x61);
+                    bw.Write((byte)0x38);
+                    bw.Write((byte)0x38);
+                    bw.Write((byte)0x36);
+                    bw.Write((byte)0x64);
+                    bw.Write((byte)0x65);
+                    bw.Write((byte)0x61);
+                    bw.Write((byte)0x36);
+                    bw.Write((byte)0x2D);
+                    bw.Write((byte)0x33);
+                    bw.Write((byte)0x39);
+                    bw.Write((byte)0x36);
+                    bw.Write((byte)0x34);
+                    bw.Write((byte)0x2D);
+                    bw.Write((byte)0x34);
+                    bw.Write((byte)0x36);
+                    bw.Write((byte)0x30);
+                    bw.Write((byte)0x64);
+                    bw.Write((byte)0x2D);
+                    bw.Write((byte)0x38);
+                    bw.Write((byte)0x31);
+                    bw.Write((byte)0x31);
+                    bw.Write((byte)0x32);
+                    bw.Write((byte)0x2D);
+                    bw.Write((byte)0x31);
+                    bw.Write((byte)0x38);
+                    bw.Write((byte)0x37);
+                    bw.Write((byte)0x34);
+                    bw.Write((byte)0x34);
+                    bw.Write((byte)0x36);
+                    bw.Write((byte)0x66);
+                    bw.Write((byte)0x66);
+                    bw.Write((byte)0x64);
+                    bw.Write((byte)0x35);
+                    bw.Write((byte)0x63);
+                    bw.Write((byte)0x66);
+
                     bw.Write((byte)0x14);
                     bw.Write((byte)0x0A);
                     bw.Write((byte)0x0B);
@@ -218,13 +265,13 @@ namespace Transport.Tests
                     bw.Write((uint)30); // Size of Info section 4
                     bw.Write((ushort)1); // Count of DataPart's
 
-                    bw.Write((uint)136); // Headers address
+                    bw.Write((uint)183); // Headers address
                     bw.Write((ushort)2); // Headers count
                     bw.Write((uint)18); // Headers size
-                    bw.Write((uint)154); // Properties address
+                    bw.Write((uint)201); // Properties address
                     bw.Write((ushort)2); // Properties count
                     bw.Write((uint)18); // Properties size
-                    bw.Write((uint)172); // Data address
+                    bw.Write((uint)219); // Data address
                     bw.Write((uint)5); // Data size
 
                     bw.Write((byte)2); // Start of Data section
@@ -286,7 +333,7 @@ namespace Transport.Tests
             /// <returns></returns>
             public static DataPack DataPack3()
             {
-                var obj = DataPackHelper.Create(null, null, null, null, null, new[] { DataPart1() });
+                var obj = DataPackHelper.Create(null, null, null, null, null, null, new[] { DataPart1() });
 
                 return obj;
             }

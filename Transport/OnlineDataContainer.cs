@@ -21,7 +21,18 @@ namespace ProtoBuf.Transport
         {
             if (stream == null) throw new ArgumentNullException("stream");
 
-            _stream = stream;
+            _stream = new NonClosingStreamWrapper(stream);
+        }
+
+        /// <summary>
+        /// Returns stream, contained within
+        /// </summary>
+        /// <returns></returns>
+        public Stream GetStream()
+        {
+            _stream.Position = 0;
+
+            return _stream;
         }
 
         /// <summary>
@@ -43,7 +54,14 @@ namespace ProtoBuf.Transport
             finally
             {
                 BufferProvider.Current.ReturnBuffer(buffer);
-                _stream.Position = 0;
+                try
+                {
+                    _stream.Position = 0;
+                }
+                catch
+                {
+                    // Ignore
+                }
             }
         }
     }

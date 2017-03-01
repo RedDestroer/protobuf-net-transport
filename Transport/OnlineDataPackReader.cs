@@ -10,16 +10,12 @@ namespace ProtoBuf.Transport
     public class OnlineDataPackReader
         : DataPackReader
     {
-        protected override void ReadDataParts(DataPack dataPack, BinaryReader br, List<DataPartInfo> dataPartInfos)
+        protected override void ReadDataParts(DataPack dataPack, BinaryReader br, List<DataPartInfo> dataPartInfos, Stream stream)
         {
-            var stream = br.BaseStream;
             foreach (var dataPartInfo in dataPartInfos)
             {
-                IDataContainer dataContainer;
-                using (var filteredStream = new FilteredStream(stream, dataPartInfo.DataAddress, dataPartInfo.DataSize))
-                {
-                    dataContainer = new OnlineDataContainer(filteredStream);
-                }
+                var filteredStream = new FilteredStream(stream, dataPartInfo.DataAddress, dataPartInfo.DataSize);
+                var dataContainer = new OnlineDataContainer(filteredStream);
 
                 var dataPart = new DataPart(dataContainer);
 

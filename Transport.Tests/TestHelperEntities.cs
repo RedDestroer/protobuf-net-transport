@@ -184,7 +184,7 @@ namespace Transport.Tests
         {
             public static DataPack Create()
             {
-                return Create(NextString(), NextDateTime(), NextString(), HeadersHelper.Create(), PropertiesHelper.Create(), DataPartHelper.CreateEnum());
+                return Create(NextString(), NextDateTime(), NextGuid(), NextString(), HeadersHelper.Create(), PropertiesHelper.Create(), DataPartHelper.CreateEnum());
             }
 
             public static IEnumerable<DataPack> CreateEnum()
@@ -196,10 +196,11 @@ namespace Transport.Tests
                     };
             }
 
-            public static DataPack Create(string prefix, DateTime? dateCreate, string description, Headers headers, Properties properties, IEnumerable<DataPart> dataParts)
+            public static DataPack Create(string prefix, DateTime? dateCreate, Guid? fileId, string description, Headers headers, Properties properties, IEnumerable<DataPart> dataParts)
             {
                 var obj = new DataPack(prefix);
                 obj.DateCreate = dateCreate;
+                obj.FileId = fileId;
                 obj.Description = description;
 
                 if (headers != null)

@@ -5,12 +5,12 @@ using ProtoBuf.Transport;
 namespace Transport.Tests
 {
     [TestClass]
-    public class OfflineDataPackReaderTest
+    public class OnlineDataPackReaderTest
     {
         [TestMethod]
         public void Read_DefaultDataStream_GetsExpectedDataPack()
         {
-            var target = new OfflineDataPackReader();
+            var target = new OnlineDataPackReader();
 
             DataPack actual;
             using (var stream = TestHelper.Defaults.Stream1())
@@ -30,7 +30,7 @@ namespace Transport.Tests
         [TestMethod]
         public void Read_SerializeAndDeserializeDataPack1_GetsExpectedDataPack()
         {
-            var target = new OfflineDataPackReader();
+            var target = new OnlineDataPackReader();
             var writer = new OfflineDataPackWriter();
 
             DataPack expected = TestHelper.Defaults.DataPack1();
@@ -48,7 +48,7 @@ namespace Transport.Tests
         [TestMethod]
         public void Read_SerializeAndDeserializeDataPack2_GetsExpectedDataPack()
         {
-            var target = new OfflineDataPackReader();
+            var target = new OnlineDataPackReader();
             var writer = new OfflineDataPackWriter();
 
             DataPack expected = TestHelper.Defaults.DataPack2();
@@ -56,18 +56,18 @@ namespace Transport.Tests
             using (var stream = new MemoryStream())
             {
                 writer.Write(expected, stream);
-                
+
                 stream.Position = 0;
                 actual = target.Read(stream, expected.GetPrefix());
-            }
 
-            TestHelper.Assertion.AreEqual(expected, actual);
+                TestHelper.Assertion.AreEqual(expected, actual);
+            }
         }
 
         [TestMethod]
         public void Read_SerializeAndDeserializeDataPack3_GetsExpectedDataPack()
         {
-            var target = new OfflineDataPackReader();
+            var target = new OnlineDataPackReader();
             var writer = new OfflineDataPackWriter();
 
             DataPack expected = TestHelper.Defaults.DataPack3();
@@ -80,9 +80,9 @@ namespace Transport.Tests
                 actual = target.Read(stream, expected.GetPrefix());
 
                 ////TestHelper.WriteAllBytes(@"X:\Temp\stream.bin", stream);
+                
+                TestHelper.Assertion.AreEqual(expected, actual);
             }
-
-            TestHelper.Assertion.AreEqual(expected, actual);
         }
     }
 }

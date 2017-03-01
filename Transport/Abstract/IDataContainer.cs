@@ -8,7 +8,13 @@ namespace ProtoBuf.Transport.Abstract
     public interface IDataContainer
     {
         /// <summary>
-        /// Copy contained inner data into the output stream.
+        /// Returns stream, contained within
+        /// </summary>
+        /// <returns></returns>
+        Stream GetStream();
+
+        /// <summary>
+        /// Copy contained inner data into the output stream
         /// </summary>
         /// <param name="stream"></param>
         void CopyToStream(Stream stream);

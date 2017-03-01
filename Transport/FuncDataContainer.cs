@@ -25,6 +25,15 @@ namespace ProtoBuf.Transport
         }
 
         /// <summary>
+        /// Returns stream, contained within
+        /// </summary>
+        /// <returns></returns>
+        public Stream GetStream()
+        {
+            return _streamFunc();
+        }
+
+        /// <summary>
         /// Copy contained inner data into the output stream.
         /// </summary>
         /// <param name="stream"></param>

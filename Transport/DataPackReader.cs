@@ -90,6 +90,18 @@ namespace ProtoBuf.Transport
                     dataPack.DateCreate = DateTime.ParseExact(dateCreateString, Consts.DateTimeFormat, CultureInfo.InvariantCulture);
                 }
 
+                var fileIdString = implicitProperties.TryGetPropertyValue("FileId", null);
+                if (fileIdString != null)
+                {
+#if NET20 || NET30 || NET35
+                    dataPack.FileId = new Guid(fileIdString);
+#endif
+
+#if NET40 || NET45
+                    dataPack.FileId = Guid.Parse(fileIdString);
+#endif
+                }
+
                 var descriptionString = implicitProperties.TryGetPropertyValue("Description", null);
                 if (descriptionString != null)
                 {
@@ -147,9 +159,9 @@ namespace ProtoBuf.Transport
                         });
                 }
 
-                ReadDataParts(dataPack, br, dataPartInfos);
+                ReadDataParts(dataPack, br, dataPartInfos, stream);
             }
-
+            
             return dataPack;
         }
 
@@ -169,7 +181,7 @@ namespace ProtoBuf.Transport
             return Read(stream, bytes);
         }
 
-        protected abstract void ReadDataParts(DataPack dataPack, BinaryReader br, List<DataPartInfo> dataPartInfos);
+        protected abstract void ReadDataParts(DataPack dataPack, BinaryReader br, List<DataPartInfo> dataPartInfos, Stream stream);
         
         protected class DataPartInfo
         {

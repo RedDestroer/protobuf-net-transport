@@ -33,8 +33,8 @@ namespace Transport.Tests
             {
                 target.Write(dataPack, actual);
 
-                ////TestHelper.WriteAllBytes(@"X:\Temp\expected.bin", expected);
-                ////TestHelper.WriteAllBytes(@"X:\Temp\actual.bin", actual);
+                TestHelper.WriteAllBytes(@"X:\Temp\expected.bin", expected);
+                TestHelper.WriteAllBytes(@"X:\Temp\actual.bin", actual);
 
                 TestHelper.Assertion.AreEqual(expected, actual);
             }

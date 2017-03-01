@@ -7,11 +7,18 @@ using ProtoBuf.Transport.Ambient;
 
 namespace ProtoBuf.Transport
 {
+    /// <summary>
+    /// Data transport container
+    /// </summary>
     public class DataPack
     {
         private readonly byte[] _dataPrefix;
         private readonly byte _prefixSize;
 
+
+        /// <summary>
+        /// Creates <see cref="DataPack"/> instance.
+        /// </summary>
         public DataPack()
         {
             Headers = new Headers();
@@ -20,6 +27,9 @@ namespace ProtoBuf.Transport
             DateCreate = TimeProvider.Current.Now;
         }
 
+        /// <summary>
+        /// Creates <see cref="DataPack"/> instance with prefix bytes.
+        /// </summary>
         public DataPack(byte[] dataPrefix = null)
             : this()
         {
@@ -32,6 +42,9 @@ namespace ProtoBuf.Transport
                 : (byte)_dataPrefix.Length;
         }
 
+        /// <summary>
+        /// Creates <see cref="DataPack"/> instance with prefix bytes (Encoding.UTF8.GetBytes(dataPrefix)).
+        /// </summary>
         public DataPack(string dataPrefix = null)
             : this()
         {
@@ -54,16 +67,39 @@ namespace ProtoBuf.Transport
                 : (byte)_dataPrefix.Length;
         }
 
+        /// <summary>
+        /// Headers of container
+        /// </summary>
         public Headers Headers { get; private set; }
 
+        /// <summary>
+        /// Properties of container
+        /// </summary>
         public Properties Properties { get; private set; }
 
+        /// <summary>
+        /// All transported data
+        /// </summary>
         public IList<DataPart> DataParts { get; private set; }
 
+        /// <summary>
+        /// Size of prefix in bytes
+        /// </summary>
         public byte PrefixSize { get { return _prefixSize; } }
 
+        /// <summary>
+        /// File identifier (for uniqueness)
+        /// </summary>
+        public Guid? FileId { get; set; }
+
+        /// <summary>
+        /// File create date
+        /// </summary>
         public DateTime? DateCreate { get; set; }
 
+        /// <summary>
+        /// File description
+        /// </summary>
         public string Description { get; set; }
 
         public byte[] GetPrefix()

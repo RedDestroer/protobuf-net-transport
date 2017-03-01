@@ -28,6 +28,15 @@ namespace ProtoBuf.Transport
         }
 
         /// <summary>
+        /// Returns stream, contained within
+        /// </summary>
+        /// <returns></returns>
+        public Stream GetStream()
+        {
+            return _tempFile.Open(FileMode.Open, FileAccess.Read, FileShare.Read);
+        }
+
+        /// <summary>
         /// Copy contained inner data into the output stream.
         /// </summary>
         /// <param name="stream"></param>
