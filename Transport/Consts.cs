@@ -8,6 +8,6 @@
         /// <summary>
         /// Date and time storage format
         /// </summary>
-        public static readonly string DateTimeFormat = "yyyyMMddTHHmmss.fff";
+        public static readonly string DateTimeFormat = "yyyy-MM-ddTHH:mm:ss.fff"; // ISO 8601
     }
 }
