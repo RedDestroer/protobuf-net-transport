@@ -9,9 +9,10 @@ namespace ProtoBuf.Transport
     [DebuggerDisplay(@"\{ ""Name"": {Name}, ""Value"": {Value} \}")]
     [ProtoContract(SkipConstructor = true)]
     public class DataPair
+        : IEquatable<DataPair>
     {
         /// <summary>
-        /// Initializes new instance of <see cref="DataPair"/>. Defaul constructo used only for deserialization purposes.
+        /// Initializes new instance of <see cref="DataPair"/>. Default constructor used only for deserialization purposes.
         /// </summary>
         private DataPair()
         {
@@ -49,6 +50,22 @@ namespace ProtoBuf.Transport
         [ProtoMember(2, IsRequired = false)]
         public string Value { get; private set; }
 
+        public static bool operator ==(DataPair left, DataPair right)
+        {
+            if (ReferenceEquals(left, right))
+                return true;
+
+            if (((object)left == null) || ((object)right == null))
+                return false;
+
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(DataPair left, DataPair right)
+        {
+            return !(left == right);
+        }
+
         /// <summary>
         /// Creates a copy of DataPair
         /// </summary>
@@ -56,6 +73,48 @@ namespace ProtoBuf.Transport
         public DataPair Clone()
         {
             return new DataPair(Name, Value);
+        }
+
+        /// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+        /// <returns>true if the current object is equal to the <paramref name="other" /> parameter; otherwise, false.</returns>
+        /// <param name="other">An object to compare with this object.</param>
+        public bool Equals(DataPair other)
+        {
+            if (ReferenceEquals(null, other))
+                return false;
+            if (ReferenceEquals(this, other))
+                return true;
+
+            return string.Equals(Name, other.Name) && string.Equals(Value, other.Value);
+        }
+
+        /// <summary>Determines whether the specified <see cref="T:System.Object" /> is equal to the current <see cref="T:System.Object" />.</summary>
+        /// <returns>true if the specified <see cref="T:System.Object" /> is equal to the current <see cref="T:System.Object" />; otherwise, false.</returns>
+        /// <param name="obj">The <see cref="T:System.Object" /> to compare with the current <see cref="T:System.Object" />. </param>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+                return false;
+            if (ReferenceEquals(this, obj))
+                return true;
+            if (obj.GetType() != GetType())
+                return false;
+
+            return Equals((DataPair)obj);
+        }
+
+        /// <summary>Serves as a hash function for a particular type. </summary>
+        /// <returns>A hash code for the current <see cref="T:System.Object" />.</returns>
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return ((Name != null
+                            ? Name.GetHashCode()
+                            : 0) * 397) ^ (Value != null
+                           ? Value.GetHashCode()
+                           : 0);
+            }
         }
     }
 }

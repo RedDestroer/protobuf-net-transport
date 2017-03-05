@@ -55,5 +55,47 @@ namespace ProtoBuf.Transport
 
             _dataContainer.CopyToStream(stream);
         }
+
+#if NET35 || NET40 || NET45
+        /// <summary>
+        /// Deserialize data from stream
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="deserializeFunc"></param>
+        /// <returns></returns>
+        public T Deserialize<T>(Func<Stream, T> deserializeFunc)
+        {
+            if (deserializeFunc == null) throw new ArgumentNullException("deserializeFunc");
+
+            T t;
+            using (var stream = GetStream())
+            {
+                t = deserializeFunc(stream);
+            }
+
+            return t;
+        }
+#endif
+
+#if NET20 || NET30
+        /// <summary>
+        /// Deserialize data from stream
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="deserializeFunc"></param>
+        /// <returns></returns>
+        public T Deserialize<T>(Func<Stream, T> deserializeFunc)
+        {
+            if (deserializeFunc == null) throw new ArgumentNullException("deserializeFunc");
+
+            T t;
+            using (var stream = GetStream())
+            {
+                t = deserializeFunc(stream);
+            }
+
+            return t;
+        }
+#endif
     }
 }

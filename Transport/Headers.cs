@@ -43,6 +43,36 @@ namespace ProtoBuf.Transport
             Add(new DataPair(header, value));
         }
 
+        public void AddIfNotExists(string header)
+        {
+            if (header == null) throw new ArgumentNullException("header");
+
+            if (Contains(header))
+                return;
+
+            Add(header);
+        }
+
+        public void AddIfNotExists(string header, string value)
+        {
+            if (header == null) throw new ArgumentNullException("header");
+
+            if (Contains(header, value))
+                return;
+
+            Add(header, value);
+        }
+
+        public void AddIfNotExists(DataPair dataPair)
+        {
+            if (dataPair == null) throw new ArgumentNullException("dataPair");
+
+            if (Contains(dataPair))
+                return;
+
+            Add(dataPair);
+        }
+
         /// <summary>Removes all items from the <see cref="T:System.Collections.Generic.ICollection`1" />.</summary>
         /// <exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.Generic.ICollection`1" /> is read-only. </exception>
         public void Clear()
@@ -55,7 +85,7 @@ namespace ProtoBuf.Transport
         /// <param name="item">The object to locate in the <see cref="T:System.Collections.Generic.ICollection`1" />.</param>
         public bool Contains(DataPair item)
         {
-            return _dataPairs.Contains(item);
+            return Contains(item.Name, item.Value);
         }
 
         public bool Contains(string header)
@@ -64,6 +94,20 @@ namespace ProtoBuf.Transport
             {
                 if (string.Equals(dataPair.Name, header, StringComparison.InvariantCulture))
                     return true;
+            }
+
+            return false;
+        }
+
+        public bool Contains(string header, string value)
+        {
+            foreach (var dataPair in _dataPairs)
+            {
+                if (string.Equals(dataPair.Name, header, StringComparison.InvariantCulture))
+                {
+                    if (string.Equals(dataPair.Value, value, StringComparison.InvariantCulture))
+                        return true;
+                }
             }
 
             return false;
@@ -88,11 +132,13 @@ namespace ProtoBuf.Transport
         /// <exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.Generic.ICollection`1" /> is read-only.</exception>
         public bool Remove(DataPair item)
         {
-            return _dataPairs.Remove(item);
+            return Remove(item.Name, item.Value);
         }
 
-        public void Remove(string header)
+        public bool Remove(string header)
         {
+            if (header == null) throw new ArgumentNullException("header");
+
             var toDelete = new List<DataPair>();
             foreach (var dataPair in _dataPairs)
             {
@@ -104,6 +150,27 @@ namespace ProtoBuf.Transport
             {
                 Remove(dataPair);
             }
+
+            return toDelete.Count > 0;
+        }
+
+        public bool Remove(string header, string value)
+        {
+            if (header == null) throw new ArgumentNullException("header");
+
+            var toDelete = new List<DataPair>();
+            foreach (var dataPair in _dataPairs)
+            {
+                if (string.Equals(dataPair.Name, header, StringComparison.InvariantCulture))
+                    toDelete.Add(dataPair);
+            }
+
+            foreach (var dataPair in toDelete)
+            {
+                Remove(dataPair);
+            }
+
+            return toDelete.Count > 0;
         }
 
         /// <summary>Gets the number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1" />.</summary>

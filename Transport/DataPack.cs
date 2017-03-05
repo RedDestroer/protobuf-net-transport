@@ -25,6 +25,9 @@ namespace ProtoBuf.Transport
             Properties = new Properties();
             DataParts = new List<DataPart>();
             DateCreate = TimeProvider.Current.Now;
+            FileId = Guid.NewGuid();
+            _dataPrefix = null;
+            _prefixSize = 0;
         }
 
         /// <summary>
@@ -160,7 +163,7 @@ namespace ProtoBuf.Transport
 
             return dataPair;
         }
-
+        
         public DataPair AddProperty(string name, string value = null)
         {
             var dataPair = new DataPair(name, value);
@@ -188,11 +191,6 @@ namespace ProtoBuf.Transport
             DataParts.Add(dataPart);
 
             return dataPart;
-        }
-
-        public DataPart GetDataPart(int index)
-        {
-            return DataParts[index];
         }
     }
 }
