@@ -132,7 +132,7 @@ namespace ProtoBuf.Transport
         /// <exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.Generic.ICollection`1" /> is read-only.</exception>
         public bool Remove(DataPair item)
         {
-            return Remove(item.Name, item.Value);
+            return _dataPairs.Remove(item);
         }
 
         public bool Remove(string header)
