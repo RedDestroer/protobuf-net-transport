@@ -128,17 +128,12 @@ namespace ProtoBuf.Transport
         {
             if (buffer == null) throw new ArgumentNullException("buffer");
 
-            int bytesToRead = count;
-            if (offset + count > _length - _position)
-            {
-                bytesToRead = (int) (_length - _position);
-            }
-
+            int bytesToRead = Math.Min(count, (int)(_length - _position));
             if (bytesToRead == 0)
                 return 0;
 
             int bytesRead = Stream.Read(buffer, offset, bytesToRead);
-            _position += bytesToRead;
+            _position += bytesRead;
 
             return bytesRead;
         }
