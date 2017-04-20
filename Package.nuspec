@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>protobuf-net-transport</id>
-    <version>0.9.7.0</version>
+    <version>0.9.8.0</version>
     <authors>Yakovlev Sergey</authors>
     <owners>Yakovlev Sergey</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -11,6 +11,7 @@
     <copyright>Copyright Yakovlev Sergey 2017</copyright>
     <tags>binary serialization protocol buffers protobuf deserialization transport</tags>
     <releaseNotes>
+      * 0.9.8.0 - fixed bug in FilteredStream
       * 0.9.7.0 - first release.
     </releaseNotes>
     <dependencies>
