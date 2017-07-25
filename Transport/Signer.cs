@@ -5,8 +5,18 @@ using ProtoBuf.Transport.Ambient;
 
 namespace ProtoBuf.Transport
 {
+    /// <summary>
+    /// Signer for <see cref="DataPack"/> stream
+    /// </summary>
     public static class Signer
     {
+        /// <summary>
+        /// Sign source <see cref="DataPack"/> stream using given sign algorithm and outputs result to destinationStream
+        /// </summary>
+        /// <param name="prefixSize">Size of file prefix</param>
+        /// <param name="signAlgorithm">Sign algorithm</param>
+        /// <param name="sourceStream">Source stream</param>
+        /// <param name="destinationStream">Destination stream</param>
         public static void Sign(uint prefixSize, ISignAlgorithm signAlgorithm, Stream sourceStream, Stream destinationStream)
         {
             if (signAlgorithm == null) throw new ArgumentNullException("signAlgorithm");
@@ -93,6 +103,12 @@ namespace ProtoBuf.Transport
             }
         }
 
+        /// <summary>
+        /// Checks if given <see cref="DataPack"/> stream is signed or not
+        /// </summary>
+        /// <param name="prefixSize"></param>
+        /// <param name="stream"></param>
+        /// <returns>True if signed; otherwise false</returns>
         public static bool IsSigned(uint prefixSize, Stream stream)
         {
             if (stream == null) throw new ArgumentNullException("stream");
@@ -110,6 +126,13 @@ namespace ProtoBuf.Transport
             return false;
         }
 
+        /// <summary>
+        /// Checks if given <see cref="DataPack"/> stream sign is correc
+        /// </summary>
+        /// <param name="prefixSize">Size of prefix</param>
+        /// <param name="signAlgorithm">Sign algorithm</param>
+        /// <param name="stream">Stream of <see cref="DataPack"/></param>
+        /// <returns></returns>
         public static bool IsSignMatch(uint prefixSize, ISignAlgorithm signAlgorithm, Stream stream)
         {
             if (signAlgorithm == null) throw new ArgumentNullException("signAlgorithm");
@@ -147,6 +170,12 @@ namespace ProtoBuf.Transport
             }
         }
 
+        /// <summary>
+        /// Removes sign from <see cref="DataPack"/> stream
+        /// </summary>
+        /// <param name="prefixSize">Size of prefix</param>
+        /// <param name="sourceStream">Source stream</param>
+        /// <param name="destinationStream">Destination stream</param>
         public static void RemoveSign(uint prefixSize, Stream sourceStream, Stream destinationStream)
         {
             if (sourceStream == null) throw new ArgumentNullException("sourceStream");

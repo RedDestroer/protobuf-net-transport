@@ -3,9 +3,16 @@ using System.Security.Cryptography;
 
 namespace ProtoBuf.Transport
 {
-    public class RsaKeyGenerator
+    /// <summary>
+    /// Generator for RSA keys
+    /// </summary>
+    public static class RsaKeyGenerator
     {
-        public string Generate()
+        /// <summary>
+        /// Generates next RSA key pair
+        /// </summary>
+        /// <returns></returns>
+        public static string Generate()
         {
             using (var rsaAlg = new RSACryptoServiceProvider())
             {
@@ -13,7 +20,12 @@ namespace ProtoBuf.Transport
             }
         }
 
-        public string GetPublicKey(string keyPair)
+        /// <summary>
+        /// Gets public key from key pair string
+        /// </summary>
+        /// <param name="keyPair">Key pair</param>
+        /// <returns>Returns only public part of key pair</returns>
+        public static string GetPublicKey(string keyPair)
         {
             if (keyPair == null) throw new ArgumentNullException("keyPair");
 

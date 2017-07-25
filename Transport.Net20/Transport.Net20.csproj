@@ -57,7 +57,12 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' != 'Debug' AND '$(Configuration)' != 'Release'">
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' == 'Debug' OR '$(Configuration)' == 'Release'">
     <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
       <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net20\protobuf-net.dll</HintPath>
       <Private>True</Private>
@@ -65,8 +70,6 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(Configuration)' == 'Debug' OR '$(Configuration)' == 'Release'">
     <Reference Include="System.configuration" />
     <Reference Include="System.Security" />
   </ItemGroup>

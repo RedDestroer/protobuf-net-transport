@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using ProtoBuf.Transport.Abstract;
 
 namespace ProtoBuf.Transport
 {
@@ -10,6 +9,13 @@ namespace ProtoBuf.Transport
     public class OnlineDataPackReader
         : DataPackReader
     {
+        /// <summary>
+        /// Read all data parts from <see cref="DataPack"/>
+        /// </summary>
+        /// <param name="dataPack"></param>
+        /// <param name="br">Binary reader</param>
+        /// <param name="dataPartInfos">List of datapart information</param>
+        /// <param name="stream">Stream of transport container</param>
         protected override void ReadDataParts(DataPack dataPack, BinaryReader br, List<DataPartInfo> dataPartInfos, Stream stream)
         {
             foreach (var dataPartInfo in dataPartInfos)

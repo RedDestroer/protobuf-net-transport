@@ -5,12 +5,18 @@ using System.Diagnostics;
 
 namespace ProtoBuf.Transport
 {
+    /// <summary>
+    /// Headers of <see cref="DataPack"/>
+    /// </summary>
     [DebuggerDisplay("Count = {Count}")]
     public class Headers
         : IList<DataPair>
     {
         private readonly IList<DataPair> _dataPairs;
 
+        /// <summary>
+        /// Creates <see cref="Headers"/> instance
+        /// </summary>
         public Headers()
         {
             _dataPairs = new List<DataPair>();
@@ -29,20 +35,30 @@ namespace ProtoBuf.Transport
         {
             return GetEnumerator();
         }
-
-        /// <summary>Adds an item to the <see cref="T:System.Collections.Generic.ICollection`1" />.</summary>
-        /// <param name="item">The object to add to the <see cref="T:System.Collections.Generic.ICollection`1" />.</param>
-        /// <exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.Generic.ICollection`1" /> is read-only.</exception>
+        
+        /// <summary>
+        /// Adds new header
+        /// </summary>
+        /// <param name="item">Header <see cref="DataPair"/></param>
         public void Add(DataPair item)
         {
             _dataPairs.Add(item);
         }
 
+        /// <summary>
+        /// Adds new header
+        /// </summary>
+        /// <param name="header">Header key</param>
+        /// <param name="value">Header value</param>
         public void Add(string header, string value = null)
         {
             Add(new DataPair(header, value));
         }
 
+        /// <summary>
+        /// Adds header if it is not exists yet
+        /// </summary>
+        /// <param name="header">Header key</param>
         public void AddIfNotExists(string header)
         {
             if (header == null) throw new ArgumentNullException("header");
@@ -53,6 +69,11 @@ namespace ProtoBuf.Transport
             Add(header);
         }
 
+        /// <summary>
+        /// Adds header if it is not exists yet
+        /// </summary>
+        /// <param name="header">Header key</param>
+        /// <param name="value">Header value</param>
         public void AddIfNotExists(string header, string value)
         {
             if (header == null) throw new ArgumentNullException("header");
@@ -63,6 +84,10 @@ namespace ProtoBuf.Transport
             Add(header, value);
         }
 
+        /// <summary>
+        /// Adds header if it is not exists yet
+        /// </summary>
+        /// <param name="dataPair">Header <see cref="DataPair"/></param>
         public void AddIfNotExists(DataPair dataPair)
         {
             if (dataPair == null) throw new ArgumentNullException("dataPair");
@@ -73,21 +98,29 @@ namespace ProtoBuf.Transport
             Add(dataPair);
         }
 
-        /// <summary>Removes all items from the <see cref="T:System.Collections.Generic.ICollection`1" />.</summary>
-        /// <exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.Generic.ICollection`1" /> is read-only. </exception>
+        /// <summary>
+        /// Clear all headers
+        /// </summary>
         public void Clear()
         {
             _dataPairs.Clear();
         }
 
-        /// <summary>Determines whether the <see cref="T:System.Collections.Generic.ICollection`1" /> contains a specific value.</summary>
-        /// <returns>true if <paramref name="item" /> is found in the <see cref="T:System.Collections.Generic.ICollection`1" />; otherwise, false.</returns>
-        /// <param name="item">The object to locate in the <see cref="T:System.Collections.Generic.ICollection`1" />.</param>
+        /// <summary>
+        /// Determines whether headers contains a specific one
+        /// </summary>
+        /// <returns>true if <paramref name="item" /> is found in the headers; otherwise, false</returns>
+        /// <param name="item">Header <see cref="DataPair"/></param>
         public bool Contains(DataPair item)
         {
             return Contains(item.Name, item.Value);
         }
 
+        /// <summary>
+        /// Determines whether headers contains a specific one with given name
+        /// </summary>
+        /// <param name="header">Header key</param>
+        /// <returns></returns>
         public bool Contains(string header)
         {
             foreach (var dataPair in _dataPairs)
@@ -99,6 +132,12 @@ namespace ProtoBuf.Transport
             return false;
         }
 
+        /// <summary>
+        /// Determines whether headers contains a specific one with given name and value
+        /// </summary>
+        /// <param name="header">Header key</param>
+        /// <param name="value">Header value</param>
+        /// <returns></returns>
         public bool Contains(string header, string value)
         {
             foreach (var dataPair in _dataPairs)
@@ -135,6 +174,11 @@ namespace ProtoBuf.Transport
             return _dataPairs.Remove(item);
         }
 
+        /// <summary>
+        /// Removes all headers with given name
+        /// </summary>
+        /// <param name="header"></param>
+        /// <returns></returns>
         public bool Remove(string header)
         {
             if (header == null) throw new ArgumentNullException("header");
@@ -154,6 +198,12 @@ namespace ProtoBuf.Transport
             return toDelete.Count > 0;
         }
 
+        /// <summary>
+        /// Removes all headers with given name and value
+        /// </summary>
+        /// <param name="header"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public bool Remove(string header, string value)
         {
             if (header == null) throw new ArgumentNullException("header");
@@ -220,6 +270,35 @@ namespace ProtoBuf.Transport
         {
             get { return _dataPairs[index]; }
             set { _dataPairs[index] = value; }
+        }
+
+        /// <summary>
+        /// Add header to headers
+        /// </summary>
+        /// <param name="header">Header name</param>
+        /// <param name="value">Header value</param>
+        /// <returns></returns>
+        public Headers With(string header, string value = null)
+        {
+            if (header == null) throw new ArgumentNullException("header");
+
+            Add(header, value);
+
+            return this;
+        }
+
+        /// <summary>
+        /// Add header to headers
+        /// </summary>
+        /// <param name="item">Data pair</param>
+        /// <returns></returns>
+        public Headers With(DataPair item)
+        {
+            if (item == null) throw new ArgumentNullException("item");
+
+            Add(item.Name, item.Value);
+
+            return this;
         }
     }
 }

@@ -6,12 +6,19 @@ using ProtoBuf.Transport.Abstract;
 
 namespace ProtoBuf.Transport
 {
+    /// <summary>
+    /// RSA sign algorithm
+    /// </summary>
     public class RsaSignAlgorithm
         : ISignAlgorithm
     {
         private const string HashAlgName = "SHA256";
         private readonly string _keyPairOrPublicKey;
 
+        /// <summary>
+        /// Creates <see cref="RsaSignAlgorithm"/> instance
+        /// </summary>
+        /// <param name="keyPairOrPublicKey">RSA key pair of just publc key</param>
         public RsaSignAlgorithm(string keyPairOrPublicKey)
         {
             if (keyPairOrPublicKey == null) throw new ArgumentNullException("keyPairOrPublicKey");
@@ -19,6 +26,11 @@ namespace ProtoBuf.Transport
             _keyPairOrPublicKey = keyPairOrPublicKey;
         }
 
+        /// <summary>
+        /// Generates <see cref="RSACryptoServiceProvider"/> from given RSA key pair
+        /// </summary>
+        /// <param name="keyPair">RSA key pair</param>
+        /// <returns></returns>
         public static RSACryptoServiceProvider GetProviderFromKey(string keyPair)
         {
             if (keyPair == null) throw new ArgumentNullException("keyPair");
@@ -29,6 +41,11 @@ namespace ProtoBuf.Transport
             return rsaAlg;
         }
 
+        /// <summary>
+        /// Returns sign of given stream
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <returns></returns>
         public byte[] GetSign(Stream stream)
         {
             if (stream == null) throw new ArgumentNullException("stream");
@@ -38,6 +55,12 @@ namespace ProtoBuf.Transport
             return GetSignedHash(hashString);
         }
 
+        /// <summary>
+        /// Verifies sign against given stream
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="signBytes"></param>
+        /// <returns>Returns true if matches; false otherwise</returns>
         public bool VerifySign(Stream stream, byte[] signBytes)
         {
             if (stream == null) throw new ArgumentNullException("stream");
@@ -49,6 +72,12 @@ namespace ProtoBuf.Transport
             return VerifySign(hashBytes, signBytes);
         }
 
+        /// <summary>
+        /// Verifies sign against given stream
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="signStream"></param>
+        /// <returns>Returns true if matches; false otherwise</returns>
         public bool VerifySign(Stream stream, Stream signStream)
         {
             if (stream == null) throw new ArgumentNullException("stream");
@@ -59,6 +88,12 @@ namespace ProtoBuf.Transport
             return VerifySign(md5Hash, signStream);
         }
 
+        /// <summary>
+        /// Verifies if hash matches sign stream
+        /// </summary>
+        /// <param name="md5Hash">MD5 hash string</param>
+        /// <param name="signStream">Sign stream</param>
+        /// <returns>Returns true if matches; false otherwise</returns>
         public bool VerifySign(string md5Hash, Stream signStream)
         {
             if (md5Hash == null) throw new ArgumentNullException("md5Hash");

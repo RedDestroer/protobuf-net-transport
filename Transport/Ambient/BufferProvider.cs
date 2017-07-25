@@ -6,6 +6,9 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace ProtoBuf.Transport.Ambient
 {
+    /// <summary>
+    /// Buffer provider
+    /// </summary>
 #if NET40 || NET45
     [ExcludeFromCodeCoverage]
 #endif
@@ -14,11 +17,17 @@ namespace ProtoBuf.Transport.Ambient
     {
         private static BufferProvider _current;
 
+        /// <summary>
+        /// Static constructor
+        /// </summary>
         static BufferProvider()
         {
             ResetToDefault();
         }
 
+        /// <summary>
+        /// Current buffer provider
+        /// </summary>
         public static BufferProvider Current
         {
             get { return _current; }
@@ -31,8 +40,14 @@ namespace ProtoBuf.Transport.Ambient
             }
         }
 
+        /// <summary>
+        /// Default size of buffers
+        /// </summary>
         public int DefaultBufferSize { get; protected set; }
 
+        /// <summary>
+        /// Reset buffer provider to defaul behaviour
+        /// </summary>
         public static void ResetToDefault()
         {
             if (_current != null)
@@ -40,9 +55,28 @@ namespace ProtoBuf.Transport.Ambient
             _current = new DefaultBufferProvider();
         }
 
+        /// <summary>
+        /// Gets buffer from buffer manager
+        /// </summary>
+        /// <returns></returns>
         public abstract byte[] TakeBuffer();
+
+        /// <summary>
+        /// Gets buffer from buffer manager with given size
+        /// </summary>
+        /// <param name="bufferSize">Size of buffer</param>
+        /// <returns></returns>
         public abstract byte[] TakeBuffer(int bufferSize);
+
+        /// <summary>
+        /// Returns buffer back to buffer manager
+        /// </summary>
+        /// <param name="buffer">Buffer to return</param>
         public abstract void ReturnBuffer(byte[] buffer);
+
+        /// <summary>
+        /// Clears buffer manager
+        /// </summary>
         public abstract void Clear();
 
 #if NET20 || !FEAT_SERVICEMODEL

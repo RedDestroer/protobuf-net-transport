@@ -22,6 +22,9 @@ namespace ProtoBuf.Transport
             _tempFile = TempFile.Create(stream);
         }
 
+        /// <summary>
+        /// Destructor
+        /// </summary>
         ~TempFileDataContainer()
         {
             Dispose();

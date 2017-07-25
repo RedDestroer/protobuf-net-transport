@@ -57,12 +57,10 @@ namespace Transport.Tests
                 DateTime? dateTime = new DateTime(2017, 02, 21, 11, 35, 45, 999);
                 string description = "Descr";
                 Guid fileId = Guid.Parse("A886DEA6-3964-460D-8112-187446FFD5CF");
-                
-                var headers = new Headers();
-                headers.Add("H", "V");
-                
-                var properties = new Properties();
-                properties.AddOrReplace("P", "V2");
+
+                var headers = new Headers().With("H", "V");
+
+                var properties = new Properties().With("P", "V2");
                 
                 var obj = DataPackHelper.Create(prefix, dateTime, fileId, description, headers, properties, new [] { DataPart2() });
 

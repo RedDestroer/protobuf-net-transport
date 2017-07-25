@@ -58,10 +58,6 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup Condition="'$(Configuration)' != 'Debug' AND '$(Configuration)' != 'Release'">
-    <Reference Include="protobuf-net">
-      <HintPath>..\Temp\NET40-sm\protobuf-net.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />

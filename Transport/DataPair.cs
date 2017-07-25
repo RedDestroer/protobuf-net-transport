@@ -50,6 +50,12 @@ namespace ProtoBuf.Transport
         [ProtoMember(2, IsRequired = false)]
         public string Value { get; private set; }
 
+        /// <summary>
+        /// Compare operator
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
         public static bool operator ==(DataPair left, DataPair right)
         {
             if (ReferenceEquals(left, right))
@@ -61,6 +67,12 @@ namespace ProtoBuf.Transport
             return left.Equals(right);
         }
 
+        /// <summary>
+        /// Operator
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
         public static bool operator !=(DataPair left, DataPair right)
         {
             return !(left == right);

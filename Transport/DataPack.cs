@@ -14,8 +14,7 @@ namespace ProtoBuf.Transport
     {
         private readonly byte[] _dataPrefix;
         private readonly byte _prefixSize;
-
-
+        
         /// <summary>
         /// Creates <see cref="DataPack"/> instance.
         /// </summary>
@@ -105,6 +104,10 @@ namespace ProtoBuf.Transport
         /// </summary>
         public string Description { get; set; }
 
+        /// <summary>
+        /// Get prefix as byte array
+        /// </summary>
+        /// <returns></returns>
         public byte[] GetPrefix()
         {
             if (PrefixSize < 1)
@@ -117,6 +120,11 @@ namespace ProtoBuf.Transport
             return dataPrefix;
         }
 
+        /// <summary>
+        /// Checks if first bytes of stream matches prefix
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <returns></returns>
         public bool IsPrefixMatch(Stream stream)
         {
             if (stream == null) throw new ArgumentNullException("stream");
@@ -133,6 +141,11 @@ namespace ProtoBuf.Transport
             return IsPrefixMatch(dataPrefix);
         }
 
+        /// <summary>
+        /// Checks if byte array matches prefix
+        /// </summary>
+        /// <param name="dataPrefix"></param>
+        /// <returns></returns>
         public bool IsPrefixMatch(byte[] dataPrefix)
         {
             if (dataPrefix == null && PrefixSize <= 0)
@@ -155,6 +168,12 @@ namespace ProtoBuf.Transport
             return true;
         }
 
+        /// <summary>
+        /// Adds header to transport container
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public DataPair AddHeader(string name, string value = null)
         {
             var dataPair = new DataPair(name, value);
@@ -163,7 +182,13 @@ namespace ProtoBuf.Transport
 
             return dataPair;
         }
-        
+
+        /// <summary>
+        /// Adds property to transport container
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public DataPair AddProperty(string name, string value = null)
         {
             var dataPair = new DataPair(name, value);
@@ -173,6 +198,11 @@ namespace ProtoBuf.Transport
             return dataPair;
         }
 
+        /// <summary>
+        /// Adds <see cref="IDataContainer"/> as part of data to transport container
+        /// </summary>
+        /// <param name="dataContainer"></param>
+        /// <returns></returns>
         public DataPart AddDataPart(IDataContainer dataContainer)
         {
             if (dataContainer == null) throw new ArgumentNullException("dataContainer");
@@ -184,6 +214,11 @@ namespace ProtoBuf.Transport
             return dataPart;
         }
 
+        /// <summary>
+        /// Adds <see cref="DataPart"/> to transport container
+        /// </summary>
+        /// <param name="dataPart"></param>
+        /// <returns></returns>
         public DataPart AddDataPart(DataPart dataPart)
         {
             if (dataPart == null) throw new ArgumentNullException("dataPart");

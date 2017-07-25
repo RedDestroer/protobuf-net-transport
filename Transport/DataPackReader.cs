@@ -13,7 +13,14 @@ namespace ProtoBuf.Transport
     public abstract class DataPackReader
         : IDataPackReader
     {
+        /// <summary>
+        /// Mark byte for information sections
+        /// </summary>
         public const byte InfoSection = 1;
+
+        /// <summary>
+        /// Mark byte for data sections
+        /// </summary>
         public const byte DataSection = 2;
 
         /// <summary>
@@ -46,7 +53,8 @@ namespace ProtoBuf.Transport
                 dataPack = new DataPack(dataPrefix)
                     {
                         DateCreate = null,
-                        Description = null
+                        Description = null,
+                        FileId = null
                     };
 
                 if (!dataPack.IsPrefixMatch(prefix))
@@ -181,24 +189,58 @@ namespace ProtoBuf.Transport
             return Read(stream, bytes);
         }
 
+        /// <summary>
+        /// Read all data parts from <see cref="DataPack"/>
+        /// </summary>
+        /// <param name="dataPack"></param>
+        /// <param name="br">Binary reader</param>
+        /// <param name="dataPartInfos">List of datapart information</param>
+        /// <param name="stream">Stream of transport container</param>
         protected abstract void ReadDataParts(DataPack dataPack, BinaryReader br, List<DataPartInfo> dataPartInfos, Stream stream);
         
+        /// <summary>
+        /// Information about data part
+        /// </summary>
         protected class DataPartInfo
         {
+            /// <summary>
+            /// Address of headers
+            /// </summary>
             public uint HeadersAddress { get; set; }
 
+            /// <summary>
+            /// Count of headers
+            /// </summary>
             public ushort HeadersCount { get; set; }
             
+            /// <summary>
+            /// Size of all headers
+            /// </summary>
             public uint HeadersSize { get; set; }
 
+            /// <summary>
+            /// Address of properties
+            /// </summary>
             public uint PropertiesAddress { get; set; }
 
+            /// <summary>
+            /// Properties count
+            /// </summary>
             public ushort PropertiesCount { get; set; }
 
+            /// <summary>
+            /// Size of all properties
+            /// </summary>
             public uint PropertiesSize { get; set; }
 
+            /// <summary>
+            /// Address of data
+            /// </summary>
             public uint DataAddress { get; set; }
 
+            /// <summary>
+            /// Size of data
+            /// </summary>
             public uint DataSize { get; set; }
         }
     }

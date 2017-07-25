@@ -8,6 +8,9 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace ProtoBuf.Transport.Ambient
 {
+    /// <summary>
+    /// Provider of temp enities
+    /// </summary>
 #if NET40 || NET45
     [ExcludeFromCodeCoverage]
 #endif
@@ -15,11 +18,17 @@ namespace ProtoBuf.Transport.Ambient
     {
         private static TempProvider _current;
 
+        /// <summary>
+        /// Static constructor
+        /// </summary>
         static TempProvider()
         {
             ResetToDefault();
         }
 
+        /// <summary>
+        /// Current <see cref="TempProvider"/>
+        /// </summary>
         public static TempProvider Current
         {
             get
@@ -35,14 +44,39 @@ namespace ProtoBuf.Transport.Ambient
             }
         }
 
+        /// <summary>
+        /// Resets <see cref="TempProvider"/> to default behaviour
+        /// </summary>
         public static void ResetToDefault()
         {
             _current = new DefaultTempProvider();
         }
 
+        /// <summary>
+        /// Returns full name of temp directory
+        /// </summary>
+        /// <returns></returns>
         public abstract string GetTempFullDirName();
+
+        /// <summary>
+        /// Returns full name of new temp file
+        /// </summary>
+        /// <returns></returns>
         public abstract string GetTempFullFileName();
+
+        /// <summary>
+        /// Returns full name of new temp file at given directory
+        /// </summary>
+        /// <param name="fullDirName">Full directory name</param>
+        /// <returns></returns>
         public abstract string GetTempFullFileName(string fullDirName);
+
+        /// <summary>
+        /// Returns full name of new temp file at given directory with file prefix
+        /// </summary>
+        /// <param name="fullDirName">Full directory name</param>
+        /// <param name="fileNamePrefix">File prefix</param>
+        /// <returns></returns>
         public abstract string GetTempFullFileName(string fullDirName, string fileNamePrefix);
 
         internal class DefaultTempProvider

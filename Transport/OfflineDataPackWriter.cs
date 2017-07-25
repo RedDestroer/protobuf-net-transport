@@ -6,12 +6,19 @@ using ProtoBuf.Transport.Abstract;
 namespace ProtoBuf.Transport
 {
     /// <summary>
-    /// Writer for DataPack
+    /// Writer for <see cref="DataPack"/>
     /// </summary>
     public class OfflineDataPackWriter
         : IDataPackWriter
     {
+        /// <summary>
+        /// Mark byte for information sections
+        /// </summary>
         public const byte InfoSection = 1;
+
+        /// <summary>
+        /// Mark byte for data sections
+        /// </summary>
         public const byte DataSection = 2;
 
         /// <summary>

@@ -4,10 +4,7 @@ using System.IO;
 namespace ProtoBuf.Transport
 {
     /// <summary>
-    /// Декоратор для потока, позволяющий выделить из потока только какой-то фрагмент
-    /// на своём диспозе не диспозит underlying поток, который декорирует.
-    /// Это сделано осознано и менять это поведение НЕЛЬЗЯ, если нужен фильтрующий поток, 
-    /// который диспозит свой подчинённый поток, то используйте DisposableFilteredStream
+    /// Stream decorator. Allows get only set fragment from base stream
     /// </summary>
     public class FilteredStream
         : Stream
@@ -17,13 +14,19 @@ namespace ProtoBuf.Transport
 
         private long _position;
 
+        /// <summary>
+        /// Creates <see cref="FilteredStream"/> instance
+        /// </summary>
+        /// <param name="stream">Base stream</param>
+        /// <param name="start">Start of fragment</param>
+        /// <param name="length">Length of fragment</param>
         public FilteredStream(Stream stream, long start, long length)
         {
             if (stream == null) throw new ArgumentNullException("stream");
-            if (start < 0) throw new ArgumentOutOfRangeException("start", start, "Начало не может быть отрицательным");
-            if (length < 0) throw new ArgumentOutOfRangeException("length", length, "Длина не может быть отрицательной");
-            if (start > stream.Length) throw new ArgumentOutOfRangeException("start", start, "Начало не может выходить за пределы декорируемого потока");
-            if (start + length > stream.Length) throw new InvalidOperationException("Начало плюс длина не могут выходить за пределы декорируемого потока");
+            if (start < 0) throw new ArgumentOutOfRangeException("start", start, "Start can not be nagative.");
+            if (length < 0) throw new ArgumentOutOfRangeException("length", length, "Length can not be negative.");
+            if (start > stream.Length) throw new ArgumentOutOfRangeException("start", start, "Start can not lay out of bounds of decorated stream.");
+            if (start + length > stream.Length) throw new InvalidOperationException("Start plus length can not lay out of bounds of decorated stream.");
 
             Stream = stream;
             _start = start;
@@ -37,26 +40,41 @@ namespace ProtoBuf.Transport
             _position = Stream.Position - start;
         }
 
+        /// <summary>
+        /// Can read from stream
+        /// </summary>
         public override bool CanRead
         {
             get { return Stream.CanRead; }
         }
 
+        /// <summary>
+        /// Can seek at stream
+        /// </summary>
         public override bool CanSeek
         {
             get { return Stream.CanSeek; }
         }
 
+        /// <summary>
+        /// Can wite to stream
+        /// </summary>
         public override bool CanWrite
         {
             get { return false; }
         }
 
+        /// <summary>
+        /// Length of stream
+        /// </summary>
         public override long Length
         {
             get { return _length; }
         }
 
+        /// <summary>
+        /// Position at stream
+        /// </summary>
         public override long Position
         {
             get { return _position; }
@@ -79,13 +97,25 @@ namespace ProtoBuf.Transport
             }
         }
 
+        /// <summary>
+        /// Underlying stream
+        /// </summary>
         protected Stream Stream { get; private set; }
 
+        /// <summary>
+        /// Flush stream
+        /// </summary>
         public override void Flush()
         {
             Stream.Flush();
         }
 
+        /// <summary>
+        /// Seek at stream
+        /// </summary>
+        /// <param name="offset"></param>
+        /// <param name="origin"></param>
+        /// <returns></returns>
         public override long Seek(long offset, SeekOrigin origin)
         {
             if (offset < 0)
@@ -119,11 +149,22 @@ namespace ProtoBuf.Transport
             return 0;
         }
 
+        /// <summary>
+        /// Set lenght of stream
+        /// </summary>
+        /// <param name="value"></param>
         public override void SetLength(long value)
         {
             throw new NotSupportedException();
         }
 
+        /// <summary>
+        /// Read bytes from stream
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="offset"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
         public override int Read(byte[] buffer, int offset, int count)
         {
             if (buffer == null) throw new ArgumentNullException("buffer");
@@ -138,6 +179,12 @@ namespace ProtoBuf.Transport
             return bytesRead;
         }
 
+        /// <summary>
+        /// Write bytes to stream
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="offset"></param>
+        /// <param name="count"></param>
         public override void Write(byte[] buffer, int offset, int count)
         {
             throw new NotSupportedException();

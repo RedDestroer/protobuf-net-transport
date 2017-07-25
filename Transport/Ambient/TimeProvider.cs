@@ -6,6 +6,9 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace ProtoBuf.Transport.Ambient
 {
+    /// <summary>
+    /// Provider of time
+    /// </summary>
 #if NET40 || NET45
     [ExcludeFromCodeCoverage]
 #endif
@@ -13,11 +16,17 @@ namespace ProtoBuf.Transport.Ambient
     {
         private static TimeProvider _current;
 
+        /// <summary>
+        /// Static constructor
+        /// </summary>
         static TimeProvider()
         {
             ResetToDefault();
         }
 
+        /// <summary>
+        /// Current <see cref="TimeProvider"/> instance
+        /// </summary>
         public static TimeProvider Current
         {
             get
@@ -33,9 +42,19 @@ namespace ProtoBuf.Transport.Ambient
             }
         }
 
+        /// <summary>
+        /// Current <see cref="DateTime"/> in UTC
+        /// </summary>
         public abstract DateTime UtcNow { get; }
+
+        /// <summary>
+        /// Current <see cref="DateTime"/>
+        /// </summary>
         public abstract DateTime Now { get; }
 
+        /// <summary>
+        /// Resets <see cref="TimeProvider"/> to default behaviour
+        /// </summary>
         public static void ResetToDefault()
         {
             _current = new DefaultTimeProvider();

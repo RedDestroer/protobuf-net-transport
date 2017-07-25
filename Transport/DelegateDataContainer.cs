@@ -13,6 +13,10 @@ namespace ProtoBuf.Transport
     {
         private readonly Action<Stream> _streamAction;
 
+        /// <summary>
+        /// Creates <see cref="DelegateDataContainer"/> instance
+        /// </summary>
+        /// <param name="streamAction"></param>
         public DelegateDataContainer(Action<Stream> streamAction)
         {
             if (streamAction == null) throw new ArgumentNullException("streamAction");
