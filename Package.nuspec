@@ -7,8 +7,10 @@
     <owners>Yakovlev Sergey</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <summary>Transport file on top of protobuf-net</summary>
-    <description>Transport file encapsulates logic for storing streams.</description>
+    <description>Transport file that encapsulates logic for storing streams.</description>
+    <projectUrl>https://github.com/RedDestroer/protobuf-net-transport/</projectUrl>
     <copyright>Copyright Yakovlev Sergey 2017</copyright>
+    <licenseUrl>https://github.com/RedDestroer/protobuf-net-transport/blob/master/LICENSE</licenseUrl>
     <tags>binary serialization protocol buffers protobuf deserialization transport</tags>
     <releaseNotes>
       * 1.0.0.0 - first public release
@@ -22,13 +24,19 @@
   <files>
     <file src=".\Output\Net20\protobuf-net-transport.dll" target="lib\Net20\protobuf-net-transport.dll" />
     <file src=".\Output\Net20\protobuf-net-transport.XML" target="lib\Net20\protobuf-net-transport.XML" />
+    <file src=".\Output\Net20\protobuf-net-transport.pdb" target="lib\Net20\protobuf-net-transport.pdb" />
     <file src=".\Output\Net30\protobuf-net-transport.dll" target="lib\Net30\protobuf-net-transport.dll" />
     <file src=".\Output\Net30\protobuf-net-transport.XML" target="lib\Net30\protobuf-net-transport.XML" />
+    <file src=".\Output\Net30\protobuf-net-transport.pdb" target="lib\Net30\protobuf-net-transport.pdb" />
     <file src=".\Output\Net35\protobuf-net-transport.dll" target="lib\Net35\protobuf-net-transport.dll" />
     <file src=".\Output\Net35\protobuf-net-transport.XML" target="lib\Net35\protobuf-net-transport.XML" />
+    <file src=".\Output\Net35\protobuf-net-transport.pdb" target="lib\Net35\protobuf-net-transport.pdb" />
     <file src=".\Output\Net40\protobuf-net-transport.dll" target="lib\Net40\protobuf-net-transport.dll" />
     <file src=".\Output\Net40\protobuf-net-transport.XML" target="lib\Net40\protobuf-net-transport.XML" />
+    <file src=".\Output\Net40\protobuf-net-transport.pdb" target="lib\Net40\protobuf-net-transport.pdb" />
     <file src=".\Output\Net45\protobuf-net-transport.dll" target="lib\Net45\protobuf-net-transport.dll" />
     <file src=".\Output\Net45\protobuf-net-transport.XML" target="lib\Net45\protobuf-net-transport.XML" />
+    <file src=".\Output\Net45\protobuf-net-transport.pdb" target="lib\Net45\protobuf-net-transport.pdb" />
+    <file src="**\*.cs" target="src" />
   </files>
 </package>
