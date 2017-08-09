@@ -25,7 +25,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{C39CB0
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1FB44804-91C1-4EB7-8C55-7A85C956D658}"
 	ProjectSection(SolutionItems) = preProject
+		LICENSE = LICENSE
 		Package.nuspec = Package.nuspec
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{9B6854F2-EF44-4844-8AC6-D23F02266FE2}"
+	ProjectSection(SolutionItems) = preProject
+		docs\index.md = docs\index.md
+		docs\releasenotes.md = docs\releasenotes.md
 	EndProjectSection
 EndProject
 Global
